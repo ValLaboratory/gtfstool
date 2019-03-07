@@ -32,8 +32,8 @@ $ gtfstool /path/to/gtfs-jp_20181001.zip >result.txt
 ```
 
 # 実行形式
-WindowsとMacOS X用ではコンパイル済みの実行形式が用意されています。
-zip形式で提供されていますので展開することでプログラムが出現します。
+WindowsとMacOS X用ではコンパイル済みの実行形式がbinディレクトリに用意されています。
+zip形式で提供されていますのでダウンロード後に展開することでプログラムが出現します。
 ```
 gtfstool-0.2_win32.zip (Windows用バイナリ)
 gtfstool-0.2_macosx.zip (MacOS X用バイナリ)
@@ -42,7 +42,8 @@ gtfstool-0.2_macosx.zip (MacOS X用バイナリ)
 # ソースコードからのビルド方法
 ソールコードをGitHubからダウンロードしてターミナルでconfigureとmakeを行います。
 環境に合わせて実行ファイルが作成されます。<p>
-セキュアなhttpプロトコル(https)を有効にする場合はOpenSSLがインストールされている必要があります。
+ソースコードからビルドする場合はコンパイラなどの開発環境がインストールされている必要があります。<p>
+https（セキュアなhttpプロトコル）を有効にする場合はOpenSSLがインストールされている必要があります。<p>
 ```
 $ ./configure && make
 ```

@@ -57,7 +57,6 @@
 		CE12A6A2221A6EF4009BF3E7 /* gtfs_io.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gtfs_io.h; sourceTree = "<group>"; };
 		CE2E4C612230AE07009B6822 /* memo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memo.txt; sourceTree = "<group>"; };
 		CE2E4C682230C164009B6822 /* bin */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bin; sourceTree = "<group>"; };
-		CE2E4C692230E8E3009B6822 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CE2E4C6A2230E8ED009B6822 /* gtfstool */ = {isa = PBXFileReference; lastKnownFileType = folder; name = gtfstool; sourceTree = "<group>"; };
 		CE351AF522164EB900B8BD1C /* gtfs_dump.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gtfs_dump.c; sourceTree = "<group>"; };
 		CE37FC072216AECB00C748EE /* gtfstool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfstool.c; sourceTree = "<group>"; };
@@ -144,7 +143,6 @@
 		CE55FACF21795A7000DF364B = {
 			isa = PBXGroup;
 			children = (
-				CE2E4C692230E8E3009B6822 /* README.md */,
 				CE2E4C6A2230E8ED009B6822 /* gtfstool */,
 				CE2E4C682230C164009B6822 /* bin */,
 				CE2E4C612230AE07009B6822 /* memo.txt */,

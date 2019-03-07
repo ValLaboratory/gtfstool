@@ -55,6 +55,7 @@
 
 /* Begin PBXFileReference section */
 		CE12A6A2221A6EF4009BF3E7 /* gtfs_io.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gtfs_io.h; sourceTree = "<group>"; };
+		CE2E4C612230AE07009B6822 /* memo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memo.txt; sourceTree = "<group>"; };
 		CE351AF522164EB900B8BD1C /* gtfs_dump.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gtfs_dump.c; sourceTree = "<group>"; };
 		CE37FC072216AECB00C748EE /* gtfstool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfstool.c; sourceTree = "<group>"; };
 		CE4E89A721928CF200D760CE /* gtfs_writer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfs_writer.c; sourceTree = "<group>"; };
@@ -62,7 +63,6 @@
 		CE55B8BF219A5F3A00B45F5B /* gtfs_split.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfs_split.c; sourceTree = "<group>"; };
 		CE55FAD821795A7000DF364B /* gtfstool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gtfstool; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE55FADB21795A7000DF364B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		CE55FAE321795C0600DF364B /* memo.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = memo.txt; sourceTree = "<group>"; };
 		CE55FAE4217992F700DF364B /* gtfstool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gtfstool.h; sourceTree = "<group>"; };
 		CE55FB082179A99D00DF364B /* gtfs_reader.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gtfs_reader.c; sourceTree = "<group>"; };
 		CE79C8A5221CE7060044A8D3 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2k/lib/libcrypto.a; sourceTree = "<group>"; };
@@ -141,7 +141,7 @@
 		CE55FACF21795A7000DF364B = {
 			isa = PBXGroup;
 			children = (
-				CE55FAE321795C0600DF364B /* memo.txt */,
+				CE2E4C612230AE07009B6822 /* memo.txt */,
 				CECD9C4F219ACA020050ED31 /* merge.conf */,
 				CEC5E9D0222FB1D5007451C0 /* aclocal.m4 */,
 				CEC5E9D3222FB1D5007451C0 /* AUTHORS */,

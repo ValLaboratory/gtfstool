@@ -97,7 +97,7 @@ struct agency_jp_t {
 
 // routes.txt
 struct route_t {
-    char route_id[64];                      // 経路ID
+    char route_id[128];                     // 経路ID
     char agency_id[64];                     // 事業者ID
     char route_short_name[256];             // 経路略称
     char route_long_name[512];              // 経路名
@@ -129,9 +129,9 @@ struct stop_t {
 
 // trips.txt
 struct trip_t {
-    char route_id[64];              // 経路ID
-    char service_id[64];            // 運行日ID
-    char trip_id[64];               // 便ID
+    char route_id[128];             // 経路ID
+    char service_id[128];           // 運行日ID
+    char trip_id[128];              // 便ID
     char trip_headsign[256];        // 行き先名
     char trip_short_name[256];      // 便名称
     char direction_id[8];           // 0:復路（上り） 1:往路（下り）
@@ -147,7 +147,7 @@ struct trip_t {
 
 // stop_times.txt
 struct stop_time_t {
-    char trip_id[64];               // 便ID
+    char trip_id[128];              // 便ID
     char arrival_time[16];          // 到着時刻（HH:MM:SS）
     char departure_time[16];        // 出発時刻（HH:MM:SS）
     char stop_id[64];               // 駅コード
@@ -162,7 +162,7 @@ struct stop_time_t {
 
 // calendar.txt
 struct calendar_t {
-    char service_id[64];            // サービスID
+    char service_id[128];           // サービスID
     char monday[8];                 // 月曜日(1 or 0)
     char tuesday[8];                // 火曜日(1 or 0)
     char wednesday[8];              // 水曜日(1 or 0)
@@ -177,7 +177,7 @@ struct calendar_t {
 
 // calendar_dates.txt
 struct calendar_date_t {
-    char service_id[64];            // サービスID
+    char service_id[128];           // サービスID
     char date[16];                  // 日付
     char exception_type[8];         // 利用タイプ(1 or 2)
     int lineno;                     // 行番号
@@ -198,7 +198,7 @@ struct fare_attribute_t {
 // fare_rules.txt
 struct fare_rule_t {
     char fare_id[64];               // 運賃ID
-    char route_id[64];              // 経路ID
+    char route_id[128];             // 経路ID
     char origin_id[64];             // 乗車駅ゾーン
     char destination_id[64];        // 降車駅ゾーン
     char contains_id[64];           // 通過ゾーン
@@ -217,7 +217,7 @@ struct shape_t {
 
 // frequencies.txt
 struct frequency_t {
-    char trip_id[64];                   // 便ID
+    char trip_id[128];                   // 便ID
     char start_time[16];                // 開始時刻
     char end_time[16];                  // 終了時刻
     char headway_secs[16];              // 運行間隔
@@ -255,7 +255,7 @@ struct translation_t {
 
 // routes_jp.txt
 struct route_jp_t {
-    char route_id[64];                      // 経路ID
+    char route_id[128];                     // 経路ID
     char route_update_date[64];             // ダイヤ改正日
     char origin_stop[256];                  // 起点
     char via_stop[256];                     // 経由地

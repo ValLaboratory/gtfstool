@@ -33,7 +33,7 @@ $ gtfstool /path/to/gtfs-jp_20181001.zip >result.txt
 
 # 実行形式
 WindowsとMacOS X用ではコンパイル済みの実行形式がbinディレクトリに用意されています。<br>
-zip形式で提供されていますのでダウンロード後に展開することでプログラムが出現します。
+zip形式で提供されていますのでダウンロード後に展開することでプログラムが利用できます。
 ```
 gtfstool-0.2_win32.zip (Windows用バイナリ)
 gtfstool-0.2_macosx.zip (MacOS X用バイナリ)

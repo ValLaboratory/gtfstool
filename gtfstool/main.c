@@ -1,0 +1,508 @@
+/* -*- Mode: C; tab-width: 4; c-basic-offset: 4; indent-tabs-mode: nil -*- */
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2018-2019 Val Laboratory Corporation.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+#define _MAIN
+#include "gtfstool.h"
+
+static void version()
+{
+    fprintf(stdout, "%s version %s\n", PROGRAM_NAME, PROGRAM_VERSION);
+    fprintf(stdout, "Copyright (c) 2018-2019 Val Laboratory Corporation.\n");
+}
+
+static void usage()
+{
+    version();
+    fprintf(stdout, "\n使い方: %s [action] [options]\n", PROGRAM_NAME);
+    fprintf(stdout, "action:  [-c gtfs.zip ...] GTFS-JPの妥当性チェックを行います(default)\n");
+    fprintf(stdout, "         [-d gtfs.zip ...] GTFS-JPのルート別にバス時刻表を表示します\n");
+    fprintf(stdout, "         [-s output_dir gtfs.zip ...] 複数のagencyを分割します\n");
+    fprintf(stdout, "         [-m merge.conf] 複数のGTFS-JPを一つにマージします\n");
+    fprintf(stdout, "         [-v] プログラムバージョンを表示します\n");
+    fprintf(stdout, "options: [-w] 警告を無視します\n");
+    fprintf(stdout, "         [-i] チェック時にcalendar_dates.txtのservice_idがcalender.txtに\n"
+                    "              存在するかチェックします\n");
+    fprintf(stdout, "         [-e error_file] システムエラーを出力するファイルを指定します\n");
+    fprintf(stdout, "         [-t] トレースモードをオンにして実行します\n");
+}
+
+static int startup()
+{
+    /* マルチスレッド対応関数の初期化 */
+    mt_initialize();
+    
+    /* エラーファイルの初期化 */
+    err_initialize(g_error_file);
+    return 0;
+}
+
+static void cleanup()
+{
+    err_finalize();
+    mt_finalize();
+}
+
+struct gtfs_t* gtfs_alloc()
+{
+    struct gtfs_t* gtfs;
+
+    gtfs = calloc(1, sizeof(struct gtfs_t));
+    gtfs->agency_tbl = vect_initialize(5);
+    gtfs->agency_jp_tbl = vect_initialize(5);
+    gtfs->routes_tbl = vect_initialize(300);
+    gtfs->stops_tbl = vect_initialize(1000);
+    gtfs->fare_rules_tbl = vect_initialize(10000);
+    gtfs->fare_attrs_tbl = vect_initialize(1000);
+    gtfs->trips_tbl = vect_initialize(1000);
+    gtfs->stop_times_tbl = vect_initialize(10000);
+    gtfs->calendar_tbl = vect_initialize(20);
+    gtfs->calendar_dates_tbl = vect_initialize(100);
+    gtfs->translations_tbl = vect_initialize(1000);
+    gtfs->shapes_tbl = vect_initialize(10000);
+    gtfs->frequencies_tbl = vect_initialize(100);
+    gtfs->transfers_tbl = vect_initialize(100);
+    gtfs->routes_jp_tbl = vect_initialize(300);
+    gtfs->office_jp_tbl = vect_initialize(20);
+    return gtfs;
+}
+
+static void init_gtfs()
+{
+    g_gtfs = gtfs_alloc();
+
+    g_gtfs_hash = calloc(1, sizeof(struct gtfs_hash_t));
+    g_gtfs_hash->agency_htbl = hash_initialize(17);
+    g_gtfs_hash->routes_htbl = hash_initialize(307);
+    g_gtfs_hash->stops_htbl = hash_initialize(1009);
+    g_gtfs_hash->trips_htbl = hash_initialize(1009);
+    g_gtfs_hash->calendar_htbl = hash_initialize(41);
+    g_gtfs_hash->calendar_dates_htbl = hash_initialize(211);
+    g_gtfs_hash->fare_attrs_htbl = hash_initialize(1009);
+    g_gtfs_hash->fare_rules_htbl = hash_initialize(999983);
+    g_gtfs_hash->translations_htbl = hash_initialize(1009);
+    g_gtfs_hash->routes_jp_htbl = hash_initialize(307);
+
+    g_vehicle_timetable = hash_initialize(1009);
+    g_route_trips_htbl = hash_initialize(1009);
+
+    g_error_count = 0;
+    g_warning_count = 0;
+}
+
+static void vector_elements_free(struct vector_t* vect)
+{
+    int i, rc;
+    
+    rc = vect_count(vect);
+    for (i = 0; i < rc; i++) {
+        void* ptr;
+        
+        ptr = vect_get(vect, i);
+        if (ptr)
+            free(ptr);
+    }
+}
+
+static void hash_elements_free(struct hash_t* hash)
+{
+    void** ptbl = hash_list(hash);
+    if (ptbl) {
+        int i = 0;
+        
+        while (ptbl[i]) {
+            vect_finalize(ptbl[i++]);
+        }
+        hash_list_free(ptbl);
+    }
+}
+
+void gtfs_free(struct gtfs_t* gtfs, int is_element_free)
+{
+    if (gtfs->agency_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->agency_tbl);
+        vect_finalize(gtfs->agency_tbl);
+    }
+    if (gtfs->agency_jp_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->agency_jp_tbl);
+        vect_finalize(gtfs->agency_jp_tbl);
+    }
+    if (gtfs->routes_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->routes_tbl);
+        vect_finalize(gtfs->routes_tbl);
+    }
+    if (gtfs->stops_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->stops_tbl);
+        vect_finalize(gtfs->stops_tbl);
+    }
+    if (gtfs->fare_rules_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->fare_rules_tbl);
+        vect_finalize(gtfs->fare_rules_tbl);
+    }
+    if (gtfs->fare_attrs_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->fare_attrs_tbl);
+        vect_finalize(gtfs->fare_attrs_tbl);
+    }
+    if (gtfs->trips_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->trips_tbl);
+        vect_finalize(gtfs->trips_tbl);
+    }
+    if (gtfs->stop_times_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->stop_times_tbl);
+        vect_finalize(gtfs->stop_times_tbl);
+    }
+    if (gtfs->calendar_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->calendar_tbl);
+        vect_finalize(gtfs->calendar_tbl);
+    }
+    if (gtfs->calendar_dates_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->calendar_dates_tbl);
+        vect_finalize(gtfs->calendar_dates_tbl);
+    }
+    if (gtfs->translations_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->translations_tbl);
+        vect_finalize(gtfs->translations_tbl);
+    }
+    if (gtfs->shapes_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->shapes_tbl);
+        vect_finalize(gtfs->shapes_tbl);
+    }
+    if (gtfs->frequencies_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->frequencies_tbl);
+        vect_finalize(gtfs->frequencies_tbl);
+    }
+    if (gtfs->transfers_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->transfers_tbl);
+        vect_finalize(gtfs->transfers_tbl);
+    }
+    if (gtfs->routes_jp_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->routes_jp_tbl);
+        vect_finalize(gtfs->routes_jp_tbl);
+    }
+    if (gtfs->office_jp_tbl) {
+        if (is_element_free)
+            vector_elements_free(gtfs->office_jp_tbl);
+        vect_finalize(gtfs->office_jp_tbl);
+    }
+    free(gtfs);
+}
+
+static void final_gtfs()
+{
+    if (g_vehicle_timetable) {
+        hash_elements_free(g_vehicle_timetable);
+        hash_finalize(g_vehicle_timetable);
+    }
+    if (g_route_trips_htbl) {
+        hash_elements_free(g_route_trips_htbl);
+        hash_finalize(g_route_trips_htbl);
+    }
+
+    if (g_gtfs_hash) {
+        if (g_gtfs_hash->agency_htbl) {
+            hash_finalize(g_gtfs_hash->agency_htbl);
+        }
+        if (g_gtfs_hash->routes_htbl) {
+            hash_finalize(g_gtfs_hash->routes_htbl);
+        }
+        if (g_gtfs_hash->stops_htbl) {
+            hash_finalize(g_gtfs_hash->stops_htbl);
+        }
+        if (g_gtfs_hash->fare_rules_htbl) {
+            hash_finalize(g_gtfs_hash->fare_rules_htbl);
+        }
+        if (g_gtfs_hash->fare_attrs_htbl) {
+            hash_finalize(g_gtfs_hash->fare_attrs_htbl);
+        }
+        if (g_gtfs_hash->trips_htbl) {
+            hash_finalize(g_gtfs_hash->trips_htbl);
+        }
+        if (g_gtfs_hash->calendar_htbl) {
+            hash_finalize(g_gtfs_hash->calendar_htbl);
+        }
+        if (g_gtfs_hash->calendar_dates_htbl) {
+            hash_finalize(g_gtfs_hash->calendar_dates_htbl);
+        }
+        if (g_gtfs_hash->translations_htbl) {
+            hash_finalize(g_gtfs_hash->translations_htbl);
+        }
+        if (g_gtfs_hash->routes_jp_htbl) {
+            hash_finalize(g_gtfs_hash->routes_jp_htbl);
+        }
+        free(g_gtfs_hash);
+    }
+
+    if (g_gtfs)
+        gtfs_free(g_gtfs, 1);
+}
+
+static int args(int argc, const char * argv[])
+{
+    int i;
+
+    if (argc < 2) {
+        usage();
+        return 1;
+    }
+
+    g_exec_mode = GTFS_CHECK_MODE;
+    g_ignore_warning = 0;
+
+    for (i = 1; i < argc; i++) {
+        if (argv[i][0] == '-') {
+            if (strcmp(argv[i], "-c") == 0) {
+                g_exec_mode = GTFS_CHECK_MODE;
+            } else if (strcmp(argv[i], "-t") == 0) {
+                g_trace_mode = 1;
+            } else if (strcmp(argv[i], "-e") == 0) {
+                if (i < argc-1)
+                    g_error_file = argv[++i];
+            } else if (strcmp(argv[i], "-w") == 0) {
+                g_ignore_warning = 1;
+            } else if (strcmp(argv[i], "-i") == 0) {
+                g_calendar_dates_service_id_check = 1;
+            } else if (strcmp(argv[i], "-s") == 0) {
+                if (i < argc-1) {
+                    g_output_dir = argv[++i];
+                    g_exec_mode = GTFS_SPLIT_MODE;
+                } else {
+                    usage();
+                    return 1;
+                }
+            } else if (strcmp(argv[i], "-m") == 0) {
+                if (i < argc-1) {
+                    g_config_file = argv[++i];
+                    g_exec_mode = GTFS_MERGE_MODE;
+                } else {
+                    usage();
+                    return 1;
+                }
+            } else if (strcmp(argv[i], "-d") == 0) {
+                g_exec_mode = GTFS_DUMP_MODE;
+            } else if (strcmp(argv[i], "-v") == 0) {
+                g_exec_mode = GTFS_VERSION_MODE;
+            } else {
+                usage();
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+static void start_print()
+{
+    char datebuf[256];
+    
+    TRACE("%s", "-------------------- START --------------------\n");
+    TRACE("%s\n", now_jststr(datebuf, sizeof(datebuf)));
+    if (strlen(g_gtfs_zip) > 0)
+        printf("GTFS(JP): %s\n\n", g_gtfs_zip);
+}
+
+static void process_time_print()
+{
+    int64 lap_time_usec;
+    long lap_time_ss;
+
+    lap_time_usec = system_time() - g_start_time;
+    lap_time_ss = (long)(lap_time_usec / 1000000L);
+    if (lap_time_ss > 0) {
+        int time_hh, time_mm, time_ss;
+
+        time_hh = (int)(lap_time_ss / 3600);
+        time_mm = (int)((lap_time_ss - (time_hh * 3600)) / 60);
+        time_ss = (int)((lap_time_ss - (time_hh * 3600 + time_mm * 60)) % 60);
+        printf("Processing time: %d:%d:%d\n", time_hh, time_mm, time_ss);
+    } else {
+        printf("Processing time: %ld(msec)\n", (long)(lap_time_usec/1000L));
+    }
+}
+
+static void check_statistics_print()
+{
+    int count, i;
+
+    printf("\n");
+    printf("Agency: ");
+    count = vect_count(g_gtfs->agency_tbl);
+    for (i = 0; i < count; i++) {
+        struct agency_t* agency;
+    
+        agency = vect_get(g_gtfs->agency_tbl, i);
+        if (i > 0)
+            printf(", ");
+        printf("%s", utf8_conv(agency->agency_name, (char*)alloca(256), 256));
+    }
+    printf("\n");
+    printf("agency.txt: %d\n", vect_count(g_gtfs->agency_tbl));
+    printf("agency_jp.txt: %d\n", vect_count(g_gtfs->agency_jp_tbl));
+    printf("routes.txt: %d\n", vect_count(g_gtfs->routes_tbl));
+    printf("stops.txt: %d\n", vect_count(g_gtfs->stops_tbl));
+    printf("trips.txt: %d\n", vect_count(g_gtfs->trips_tbl));
+    printf("stop_times.txt: %d\n", vect_count(g_gtfs->stop_times_tbl));
+    printf("calendar.txt: %d\n", vect_count(g_gtfs->calendar_tbl));
+    printf("calendar_dates.txt: %d\n", vect_count(g_gtfs->calendar_dates_tbl));
+    printf("fare_attributes.txt: %d\n", vect_count(g_gtfs->fare_attrs_tbl));
+    printf("fare_rules.txt: %d\n", vect_count(g_gtfs->fare_rules_tbl));
+    printf("translations.txt: %d\n", vect_count(g_gtfs->translations_tbl));
+    printf("\n");
+
+    if (g_ignore_warning)
+        printf("Error: %ld\n", g_error_count);
+    else
+        printf("Error: %ld, Warning: %ld\n", g_error_count, g_warning_count);
+
+    process_time_print();
+    TRACE("%s", "-------------------- END --------------------\n\n");
+}
+
+static void statistics_print()
+{
+    process_time_print();
+    TRACE("%s", "-------------------- END --------------------\n\n");
+}
+
+static void merge_statistics_print()
+{
+    int count, i;
+
+    printf("merged gtfs(jp): \n");
+    count = vect_count(g_merge_gtfs_tbl);
+    for (i = 0; i < count; i++) {
+        struct merge_gtfs_prefix_t* m;
+            
+        m = (struct merge_gtfs_prefix_t*)vect_get(g_merge_gtfs_tbl, i);
+        printf("  (%d) %s\n", i+1, m->gtfs_file_name);
+    }
+    printf("total %d gtfs(jp).\n", count);
+    printf("output: %s\n", g_merged_gtfs_name);
+    process_time_print();
+    TRACE("%s", "-------------------- END --------------------\n\n");
+}
+
+static int merge_mode()
+{
+    TRACE("%s\n", "*GTFS MERGE START*");
+    g_merge_gtfs_tbl = vect_initialize(20);
+    if (merge_config(g_config_file) < 0)
+        return 1;
+    g_start_time = system_time();
+    start_print();
+    if (gtfs_merge() == 0)
+        merge_statistics_print();
+    vector_elements_free(g_merge_gtfs_tbl);
+    vect_finalize(g_merge_gtfs_tbl);
+    return 0;
+}
+
+static void dump_mode(int argc, const char* argv[])
+{
+    int i;
+    
+    TRACE("%s\n", "*GTFS DUMP START*");
+    g_start_time = system_time();
+
+    for (i = 1; i < argc; i++) {
+        if (*argv[i] == '-') {
+            if (strcmp(argv[i], "-e") == 0 || strcmp(argv[i], "-s") == 0)
+                i++;    // skip argument
+            continue;
+        }
+        
+        init_gtfs();
+        strcpy(g_gtfs_zip, argv[i]);
+        g_ignore_warning = 1;
+        if (gtfs_check() == 0)
+            gtfs_dump();
+        final_gtfs();
+    }
+}
+
+static void check_split_mode(int argc, const char* argv[])
+{
+    int i;
+    
+    for (i = 1; i < argc; i++) {
+        if (*argv[i] == '-') {
+            if (strcmp(argv[i], "-e") == 0 || strcmp(argv[i], "-s") == 0)
+                i++;    // skip argument
+            continue;
+        }
+        
+        init_gtfs();
+        strcpy(g_gtfs_zip, argv[i]);
+        g_start_time = system_time();
+        start_print();
+        
+        if (g_exec_mode == GTFS_CHECK_MODE) {
+            TRACE("%s\n", "*GTFS CHECK START*");
+            if (gtfs_check() == 0)
+                check_statistics_print();
+        } else if (g_exec_mode == GTFS_SPLIT_MODE) {
+            TRACE("%s\n", "*GTFS SPLIT START*");
+            if (gtfs_split() == 0)
+                statistics_print();
+        }
+        final_gtfs();
+    }
+}
+
+int main(int argc, const char * argv[])
+{
+    args(argc, argv);
+    if (startup() < 0)
+        return 1;
+
+    if (g_exec_mode == GTFS_MERGE_MODE) {
+        if (merge_mode() != 0)
+            return 1;
+    } else if (g_exec_mode == GTFS_DUMP_MODE) {
+        dump_mode(argc, argv);
+    } else if (g_exec_mode == GTFS_VERSION_MODE) {
+        version();
+    } else {
+        check_split_mode(argc, argv);
+    }
+    cleanup();
+
+#ifdef _WIN32
+    _CrtDumpMemoryLeaks();
+#endif
+    return 0;
+}

@@ -60,6 +60,23 @@
 		CE351AF522164EB900B8BD1C /* gtfs_dump.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gtfs_dump.c; sourceTree = "<group>"; };
 		CE37FC072216AECB00C748EE /* gtfstool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfstool.c; sourceTree = "<group>"; };
 		CE4E89A721928CF200D760CE /* gtfs_writer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfs_writer.c; sourceTree = "<group>"; };
+		CE532399223278620030F719 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		CE53239A223278620030F719 /* autom4te.cache */ = {isa = PBXFileReference; lastKnownFileType = folder; path = autom4te.cache; sourceTree = "<group>"; };
+		CE53239B223278620030F719 /* depcomp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = depcomp; sourceTree = "<group>"; };
+		CE53239C223278630030F719 /* ChangeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog; sourceTree = "<group>"; };
+		CE53239D223278630030F719 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		CE53239E223278630030F719 /* install-sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "install-sh"; sourceTree = "<group>"; };
+		CE53239F223278630030F719 /* finish.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = finish.sh; sourceTree = "<group>"; };
+		CE5323A0223278630030F719 /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		CE5323A1223278630030F719 /* missing */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = missing; sourceTree = "<group>"; };
+		CE5323A2223278630030F719 /* config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config.h.in; sourceTree = "<group>"; };
+		CE5323A3223278630030F719 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		CE5323A4223278630030F719 /* configure */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = configure; sourceTree = "<group>"; };
+		CE5323A5223278630030F719 /* aclocal.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = aclocal.m4; sourceTree = "<group>"; };
+		CE5323A6223278630030F719 /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
+		CE5323A7223278630030F719 /* INSTALL */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = INSTALL; sourceTree = "<group>"; };
+		CE5323A8223278630030F719 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
+		CE5323A9223278630030F719 /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CE55B8BE219A5F3A00B45F5B /* gtfs_check.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfs_check.c; sourceTree = "<group>"; };
 		CE55B8BF219A5F3A00B45F5B /* gtfs_split.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfs_split.c; sourceTree = "<group>"; };
 		CE55FAD821795A7000DF364B /* gtfstool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gtfstool; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,23 +90,6 @@
 		CEAF9543223217380051D480 /* memo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memo.txt; sourceTree = "<group>"; };
 		CECD9C4D219AC6C60050ED31 /* merge_config.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = merge_config.c; sourceTree = "<group>"; };
 		CECD9C50219C17E00050ED31 /* gtfs_merge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gtfs_merge.c; sourceTree = "<group>"; };
-		CECE1F08223232AF00D1B0DE /* aclocal.m4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = aclocal.m4; sourceTree = "<group>"; };
-		CECE1F09223232AF00D1B0DE /* config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config.h.in; sourceTree = "<group>"; };
-		CECE1F0A223232AF00D1B0DE /* finish.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = finish.sh; sourceTree = "<group>"; };
-		CECE1F0B223232AF00D1B0DE /* missing */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = missing; sourceTree = "<group>"; };
-		CECE1F0C223232AF00D1B0DE /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
-		CECE1F0D223232B000D1B0DE /* autom4te.cache */ = {isa = PBXFileReference; lastKnownFileType = folder; path = autom4te.cache; sourceTree = "<group>"; };
-		CECE1F0E223232B000D1B0DE /* NEWS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
-		CECE1F0F223232B000D1B0DE /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
-		CECE1F10223232B000D1B0DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		CECE1F11223232B000D1B0DE /* install-sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "install-sh"; sourceTree = "<group>"; };
-		CECE1F12223232B000D1B0DE /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		CECE1F13223232B000D1B0DE /* depcomp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = depcomp; sourceTree = "<group>"; };
-		CECE1F14223232B000D1B0DE /* ChangeLog */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ChangeLog; sourceTree = "<group>"; };
-		CECE1F15223232B000D1B0DE /* configure */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = configure; sourceTree = "<group>"; };
-		CECE1F16223232B100D1B0DE /* Makefile.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
-		CECE1F17223232B100D1B0DE /* INSTALL */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = INSTALL; sourceTree = "<group>"; };
-		CECE1F18223232B100D1B0DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED14501221BBCF300F359F3 /* zlibutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zlibutil.h; sourceTree = "<group>"; };
 		CED14502221BBCF300F359F3 /* strutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = strutil.h; sourceTree = "<group>"; };
 		CED14503221BBCF300F359F3 /* hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hash.c; sourceTree = "<group>"; };
@@ -141,10 +141,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE532398223278380030F719 /* autotools */ = {
+			isa = PBXGroup;
+			children = (
+				CE5323A5223278630030F719 /* aclocal.m4 */,
+				CE5323A8223278630030F719 /* AUTHORS */,
+				CE53239A223278620030F719 /* autom4te.cache */,
+				CE53239C223278630030F719 /* ChangeLog */,
+				CE5323A2223278630030F719 /* config.h.in */,
+				CE5323A4223278630030F719 /* configure */,
+				CE5323A9223278630030F719 /* configure.ac */,
+				CE5323A3223278630030F719 /* COPYING */,
+				CE53239B223278620030F719 /* depcomp */,
+				CE53239F223278630030F719 /* finish.sh */,
+				CE5323A7223278630030F719 /* INSTALL */,
+				CE53239E223278630030F719 /* install-sh */,
+				CE53239D223278630030F719 /* Makefile.am */,
+				CE5323A0223278630030F719 /* Makefile.in */,
+				CE5323A1223278630030F719 /* missing */,
+				CE5323A6223278630030F719 /* NEWS */,
+				CE532399223278620030F719 /* README */,
+			);
+			name = autotools;
+			sourceTree = "<group>";
+		};
 		CE55FACF21795A7000DF364B = {
 			isa = PBXGroup;
 			children = (
-				CECE1F072232324200D1B0DE /* autotools */,
 				CEAF9543223217380051D480 /* memo.txt */,
 				CEAF9542223217380051D480 /* merge.conf */,
 				CE2E4C6B2230E9FE009B6822 /* README.md */,
@@ -166,6 +189,7 @@
 		CE55FADA21795A7000DF364B /* gtfstool */ = {
 			isa = PBXGroup;
 			children = (
+				CE532398223278380030F719 /* autotools */,
 				CED14500221BBCBC00F359F3 /* base */,
 				CE9CBAF2217EDC1500785E30 /* miniz.c */,
 				CE55FAE4217992F700DF364B /* gtfstool.h */,
@@ -190,30 +214,6 @@
 				CE79C8A5221CE7060044A8D3 /* libcrypto.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		CECE1F072232324200D1B0DE /* autotools */ = {
-			isa = PBXGroup;
-			children = (
-				CECE1F08223232AF00D1B0DE /* aclocal.m4 */,
-				CECE1F0F223232B000D1B0DE /* AUTHORS */,
-				CECE1F0D223232B000D1B0DE /* autom4te.cache */,
-				CECE1F14223232B000D1B0DE /* ChangeLog */,
-				CECE1F09223232AF00D1B0DE /* config.h.in */,
-				CECE1F15223232B000D1B0DE /* configure */,
-				CECE1F18223232B100D1B0DE /* configure.ac */,
-				CECE1F0C223232AF00D1B0DE /* COPYING */,
-				CECE1F13223232B000D1B0DE /* depcomp */,
-				CECE1F0A223232AF00D1B0DE /* finish.sh */,
-				CECE1F17223232B100D1B0DE /* INSTALL */,
-				CECE1F11223232B000D1B0DE /* install-sh */,
-				CECE1F10223232B000D1B0DE /* Makefile.am */,
-				CECE1F16223232B100D1B0DE /* Makefile.in */,
-				CECE1F0B223232AF00D1B0DE /* missing */,
-				CECE1F0E223232B000D1B0DE /* NEWS */,
-				CECE1F12223232B000D1B0DE /* README */,
-			);
-			name = autotools;
 			sourceTree = "<group>";
 		};
 		CED14500221BBCBC00F359F3 /* base */ = {

@@ -49,4 +49,4 @@ gtfstool_SOURCES=	main.c \
 					base/sock.c
 
 gtfstool_CFLAGS = -I. 
-gtfstool_LDADD = $(LIBS)
+gtfstool_LDADD = -lm $(LIBS)

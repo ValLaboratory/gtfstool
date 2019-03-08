@@ -45,5 +45,6 @@ gtfstool-0.2_macosx.zip (MacOS X用バイナリ)
 ソースコードからビルドする場合はコンパイラなどの開発環境がインストールされている必要があります。<br>
 https（セキュアなhttpプロトコル）を有効にする場合はOpenSSLがインストールされている必要があります。
 ```
+$ cd gtfstool
 $ ./configure && make
 ```

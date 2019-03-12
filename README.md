@@ -11,9 +11,9 @@ $ gtfstool [アクション][オプション] GTFS-JPファイル名 ...
 ```
 ```
 [アクション]
-    [-c gtfs.zip ...] GTFS-JPの妥当性チェックを行います(default)
-    [-d gtfs.zip ...] GTFS-JPのルート別にバス時刻表を表示します
-    [-s output_dir gtfs.zip ...] 複数のagencyを分割します
+    [-c] GTFS-JPの妥当性チェックを行います(default)
+    [-d] GTFS-JPのルート別にバス時刻表を表示します
+    [-s output_dir] 複数のagencyを分割します
     [-m merge.conf] 複数のGTFS-JPを一つにマージします
     [-v] プログラムバージョンを表示します
 [オプション]

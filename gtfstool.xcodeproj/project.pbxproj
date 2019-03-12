@@ -490,9 +490,7 @@
 					"DEBUG=1",
 					HAVE_OPENSSL,
 				);
-				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/openssl/1.0.2k/include;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/openssl/1.0.2k/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				"MTL_ENABLE_DEBUG_INFO[arch=*]" = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -504,9 +502,8 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_OPENSSL;
-				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/openssl/1.0.2k/include;
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = HAVE_OPENSSL;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/Cellar/openssl/1.0.2k/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

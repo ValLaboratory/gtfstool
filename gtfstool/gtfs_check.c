@@ -1185,59 +1185,6 @@ static int gtfs_column_exist_check()
     return result;
 }
 
-static int gtfs_trips_relation_check()
-{
-    int result = 0;
-    int count, i;
-    
-    count = vect_count(g_gtfs->trips_tbl);
-    for (i = 0; i < count; i++) {
-        struct trip_t* trip;
-        
-        trip = (struct trip_t*)vect_get(g_gtfs->trips_tbl, i);
-        // route_idがroutes.txtに登録されているかチェック
-        if (! hash_get(g_gtfs_hash->routes_htbl, trip->route_id)) {
-            int ret = gtfs_error("trips.txtの%d行目のroute_id[%s]がroutes.txtに登録されていません。",
-                                 trip->lineno,
-                                 utf8_conv(trip->route_id, (char*)alloca(256), 256));
-            if (ret < result)
-                result = ret;
-        }
-        // service_idがcalendr.txtかcalendar_dates.txtに登録されているかチェック
-        if (! service_id_check(trip->service_id)) {
-            int ret = gtfs_error("trips.txtの%d行目のservice_id[%s]がcalendar.txtかcalendar_dates.txtに登録されていません。",
-                                 trip->lineno,
-                                 utf8_conv(trip->service_id, (char*)alloca(256), 256));
-            if (ret < result)
-                result = ret;
-        }
-    }
-    return result;
-}
-
-static int gtfs_fare_rules_relation_check()
-{
-    int result = 0;
-    int count, i;
-    
-    count = vect_count(g_gtfs->fare_rules_tbl);
-    for (i = 0; i < count; i++) {
-        struct fare_rule_t* frule;
-        
-        frule = (struct fare_rule_t*)vect_get(g_gtfs->fare_rules_tbl, i);
-
-        // fare_idがfare_attributes.txtに登録されているかチェック
-        if (! hash_get(g_gtfs_hash->fare_attrs_htbl, frule->fare_id)) {
-            int ret = gtfs_error("fare_rules.txtの%d行目のfare_id[%s]がfare_attributes.txtに登録されていません。",
-                                 frule->lineno,
-                                 utf8_conv(frule->fare_id, (char*)alloca(256), 256));
-            if (ret < result)
-                result = ret;
-        }
-    }
-    return result;
-}
-
 static int trip_timetable_put_index(struct vector_t* times, struct stop_time_t* stoptime)
 {
     int count, i;
@@ -1949,10 +1896,6 @@ int gtfs_check()
     if (gtfs_column_exist_check() == GTFS_FATAL_ERROR)
         return -1;
 
-    TRACE("%s\n", "*trips.txtのroute_idとservice_idの関係性チェック*");
-    if (gtfs_trips_relation_check() == GTFS_FATAL_ERROR)
-        return -1;
-
     TRACE("%s\n", "*通過時刻表の作成*");
     gtfs_vehicle_timetable();
 
@@ -1969,10 +1912,6 @@ int gtfs_check()
 
     if (is_gtfs_file_exist(GTFS_FILE_FARE_RULES)) {
         // 運賃関係のチェック
-        TRACE("%s\n", "*fare_rules.txtのfare_idがfare_attributes.txtに登録されているかチェック*");
-        if (gtfs_fare_rules_relation_check() == GTFS_FATAL_ERROR)
-            return -1;
-
         TRACE("%s\n", "*通過時刻表の区間運賃がfare_rules.txtに登録されているかチェック*");
         if (gtfs_od_fare_check() == GTFS_FATAL_ERROR)
             return -1;

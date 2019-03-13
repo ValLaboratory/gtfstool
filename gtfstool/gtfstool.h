@@ -260,6 +260,16 @@ extern
 #endif
 int g_is_free_bus;
 
+#ifndef _MAIN
+extern
+#endif
+char* g_proxy_server;
+
+#ifndef _MAIN
+extern
+#endif
+unsigned int g_proxy_port;
+
 // prototypes
 #ifdef __cplusplus
 extern "C" {

@@ -34,15 +34,16 @@ static void version()
 static void usage()
 {
     version();
-    fprintf(stdout, "\n使い方: %s [action] [options]\n", PROGRAM_NAME);
-    fprintf(stdout, "action:  [-c gtfs.zip ...] GTFS-JPの妥当性チェックを行います(default)\n");
-    fprintf(stdout, "         [-d gtfs.zip ...] GTFS-JPのルート別にバス時刻表を表示します\n");
-    fprintf(stdout, "         [-s output_dir gtfs.zip ...] 複数のagencyを分割します\n");
+    fprintf(stdout, "\n使い方: %s [action] [options]  gtfs.zip ...\n", PROGRAM_NAME);
+    fprintf(stdout, "action:  [-c] GTFS-JPの整合性チェックを行います(default)\n");
+    fprintf(stdout, "         [-d] GTFS-JPのルート別にバス時刻表を表示します\n");
+    fprintf(stdout, "         [-s output_dir] 複数のagencyを分割します\n");
     fprintf(stdout, "         [-m merge.conf] 複数のGTFS-JPを一つにマージします\n");
     fprintf(stdout, "         [-v] プログラムバージョンを表示します\n");
-    fprintf(stdout, "options: [-w] 警告を無視します\n");
+    fprintf(stdout, "options: [-w] 整合性チェック時の警告を無視します\n");
     fprintf(stdout, "         [-i] チェック時にcalendar_dates.txtのservice_idがcalender.txtに\n"
                     "              存在するかチェックします\n");
+    fprintf(stdout, "         [-p proxy_server:port] プロキシサーバとポート番号を指定します\n");
     fprintf(stdout, "         [-e error_file] システムエラーを出力するファイルを指定します\n");
     fprintf(stdout, "         [-t] トレースモードをオンにして実行します\n");
 }
@@ -51,7 +52,9 @@ static int startup()
 {
     /* マルチスレッド対応関数の初期化 */
     mt_initialize();
-    
+    /* ソケット関数の初期化 */
+    sock_initialize();
+
     /* エラーファイルの初期化 */
     err_initialize(g_error_file);
     return 0;
@@ -60,6 +63,7 @@ static int startup()
 static void cleanup()
 {
     err_finalize();
+    sock_finalize();
     mt_finalize();
 }
 
@@ -292,6 +296,17 @@ static int args(int argc, const char * argv[])
             } else if (strcmp(argv[i], "-e") == 0) {
                 if (i < argc-1)
                     g_error_file = argv[++i];
+            } else if (strcmp(argv[i], "-p") == 0) {
+                if (i < argc-1) {
+                    int index;
+
+                    g_proxy_server = (char*)argv[++i];
+                    index = indexof(g_proxy_server, ':');
+                    if (index >= 0) {
+                        g_proxy_port = atoi(&g_proxy_server[index+1]);
+                        g_proxy_server[index] = '\0';
+                    }
+                }
             } else if (strcmp(argv[i], "-w") == 0) {
                 g_ignore_warning = 1;
             } else if (strcmp(argv[i], "-i") == 0) {
@@ -431,6 +446,14 @@ static int merge_mode()
     return 0;
 }
 
+static int is_skip_argument(const char* argv)
+{
+    if (strcmp(argv, "-s") == 0 || strcmp(argv, "-m") == 0 ||
+        strcmp(argv, "-e") == 0 || strcmp(argv, "-p") == 0)
+        return 1;
+    return 0;
+}
+
 static void dump_mode(int argc, const char* argv[])
 {
     int i;
@@ -440,7 +463,7 @@ static void dump_mode(int argc, const char* argv[])
 
     for (i = 1; i < argc; i++) {
         if (*argv[i] == '-') {
-            if (strcmp(argv[i], "-e") == 0 || strcmp(argv[i], "-s") == 0)
+            if (is_skip_argument(argv[i]))
                 i++;    // skip argument
             continue;
         }
@@ -460,7 +483,7 @@ static void check_split_mode(int argc, const char* argv[])
     
     for (i = 1; i < argc; i++) {
         if (*argv[i] == '-') {
-            if (strcmp(argv[i], "-e") == 0 || strcmp(argv[i], "-s") == 0)
+            if (is_skip_argument(argv[i]))
                 i++;    // skip argument
             continue;
         }

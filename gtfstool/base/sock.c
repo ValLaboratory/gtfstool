@@ -33,6 +33,11 @@ static CS_DEF(sock_critical_section);
 
 void sock_initialize()
 {
+#ifdef _WIN32
+    WSADATA wsaData;
+    WSAStartup(MAKEWORD(2,0), &wsaData);
+#endif
+
     if (init_count == 0) {
         CS_INIT(&sock_critical_section);
     }
@@ -45,6 +50,10 @@ void sock_finalize()
     if (init_count == 0) {
         CS_DELETE(&sock_critical_section);
     }
+
+#ifdef _WIN32
+    WSACleanup();
+#endif
 }
 
 /*
@@ -62,8 +71,24 @@ int sock_mkserver(const char* host,
                   ushort port,
                   struct sockaddr_in* server)
 {
-    struct hostent* servhost;
+    struct addrinfo hints, *res;
+
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_family = AF_INET;
+    
+    if (getaddrinfo(host, NULL, &hints, &res) != 0) {
+        err_write("sock_mkserver: %s can't IP address.", host);
+        return -1;
+    }
+    memcpy(server, res->ai_addr, res->ai_addrlen);
+    server->sin_port = htons(port);
+    freeaddrinfo(res);
+    return 0;
+
+#if 0
     int result = 0;
+    struct hostent* servhost;
 
     /* gethostbyname(), gethostbyaddr()がスレッド対応でないため
      * クリティカルセクションで処理を行います。
@@ -90,6 +115,7 @@ int sock_mkserver(const char* host,
     }
     CS_END(&sock_critical_section);
     return result;
+#endif
 }
 
 /*

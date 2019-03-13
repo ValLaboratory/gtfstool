@@ -1318,7 +1318,7 @@ static char* url_request(const char* url, size_t* res_size)
     hdr = alloc_http_header();
     init_http_header(hdr);
 
-    ptr = url_post(url, hdr, NULL, NULL, 0, &size);
+    ptr = url_post(url, hdr, NULL, g_proxy_server, g_proxy_port, &size);
     *res_size = size;
 
     free_http_header(hdr);

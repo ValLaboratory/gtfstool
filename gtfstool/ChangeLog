@@ -2,3 +2,8 @@
 
 * first release version 0.2.
 
+2019-03-13  Naoki YAMAMOTO  <yamamoto@val.co.jp>
+
+* http(s)でのアクセスでプロキシサーバに対応しました。
+    - プログラムの起動オプションに "-p proxy_server:port" を追加
+

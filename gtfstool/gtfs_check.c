@@ -1534,7 +1534,7 @@ static int gtfs_od_fare_check()
                     fare_rule_key(trip->route_id, origin_zone, dest_zone, hkey);
                     if (hash_get(fare_error_htbl, hkey))
                         continue;
-                    ret = gtfs_error("route_id[%s]の[%s(%s(%s))]-[%s(%s(%s))]区間の運賃がfare_rules.txtに登録されいません。",
+                    ret = gtfs_error("route_id[%s]の[%s(%s(%s))]-[%s(%s(%s))]区間の運賃がfare_rules.txtに登録されていません。",
                                      utf8_conv(trip->route_id, rid, sizeof(rid)),
                                      utf8_conv(get_stop_name(origin_st->stop_id), sname, sizeof(sname)),
                                      utf8_conv(origin_st->stop_id, sid, sizeof(sid)),

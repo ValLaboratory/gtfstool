@@ -33,7 +33,7 @@ static int _csv_fd = -1;
 void csv_initialize(const char* file_name)
 {
     if (file_name != NULL && *file_name != '\0') {
-        _csv_fd = FILE_OPEN(file_name, O_WRONLY|O_CREAT, CREATE_MODE);
+        _csv_fd = FILE_OPEN(file_name, O_WRONLY|O_CREAT|O_BINARY, CREATE_MODE);
         if (_csv_fd < 0) {
             fprintf(stderr, "csv file can't open [%d]: ", errno);
             perror("");

@@ -71,9 +71,11 @@
 #define CHOICE_TRIP_HEADSIGN        3
 #define CHOICE_TRIP_SHORT_NAME      4
 
+#define GTFS_ID_SIZE                128
+
 // agency.txt
 struct agency_t {
-    char agency_id[64];
+    char agency_id[GTFS_ID_SIZE];
     char agency_name[256];
     char agency_url[256];
     char agency_timezone[64];
@@ -86,7 +88,7 @@ struct agency_t {
 
 // agency_jp.txt
 struct agency_jp_t {
-    char agency_id[64];
+    char agency_id[GTFS_ID_SIZE];
     char agency_official_name[256];
     char agency_zip_number[64];
     char agency_address[256];
@@ -97,60 +99,60 @@ struct agency_jp_t {
 
 // routes.txt
 struct route_t {
-    char route_id[128];                     // 経路ID
-    char agency_id[64];                     // 事業者ID
-    char route_short_name[256];             // 経路略称
-    char route_long_name[512];              // 経路名
-    char route_desc[256];                   // 経路情報
-    char route_type[8];                     // 経路タイプ（バス事業者は3固定）
-    char route_url[256];                    // 経路URL
-    char route_color[64];                   // 経路色 ex.(00FFFF)
-    char route_text_color[64];              // 経路文字色 ex.(0000FF)
-    char jp_parent_route_id[256];           // 路線ID
-    int lineno;                             // 行番号
+    char route_id[GTFS_ID_SIZE];        // 経路ID
+    char agency_id[GTFS_ID_SIZE];       // 事業者ID
+    char route_short_name[256];         // 経路略称
+    char route_long_name[512];          // 経路名
+    char route_desc[256];               // 経路情報
+    char route_type[8];                 // 経路タイプ（バス事業者は3固定）
+    char route_url[256];                // 経路URL
+    char route_color[64];               // 経路色 ex.(00FFFF)
+    char route_text_color[64];          // 経路文字色 ex.(0000FF)
+    char jp_parent_route_id[256];       // 路線ID
+    int lineno;                         // 行番号
 };
 
 // stops.txt
 struct stop_t {
-    char stop_id[64];               // 停留所・標柱ID
-    char stop_code[256];            // 停留所・標柱番号
-    char stop_name[256];            // 停留所・標柱名称
-    char stop_desc[256];            // 停留所・標柱付加情報
-    char stop_lat[64];              // 緯度
-    char stop_lon[64];              // 経度
-    char zone_id[64];               // 運賃用ゾーンID
-    char stop_url[256];             // 停留所・標柱URL
-    char location_type[8];          // 停留所・標柱区分(0:標柱 1:停留所)
-    char parent_station[64];        // 標柱の場合の停留所ID
-    char stop_timezone[64];         // タイムゾーン
-    char wheelchair_boarding[8];    // 車椅子情報
-    int lineno;                     // 行番号
+    char stop_id[GTFS_ID_SIZE];         // 停留所・標柱ID
+    char stop_code[256];                // 停留所・標柱番号
+    char stop_name[256];                // 停留所・標柱名称
+    char stop_desc[256];                // 停留所・標柱付加情報
+    char stop_lat[64];                  // 緯度
+    char stop_lon[64];                  // 経度
+    char zone_id[GTFS_ID_SIZE];         // 運賃用ゾーンID
+    char stop_url[256];                 // 停留所・標柱URL
+    char location_type[8];              // 停留所・標柱区分(0:標柱 1:停留所)
+    char parent_station[GTFS_ID_SIZE];  // 標柱の場合の停留所ID
+    char stop_timezone[64];             // タイムゾーン
+    char wheelchair_boarding[8];        // 車椅子情報
+    int lineno;                         // 行番号
 };
 
 // trips.txt
 struct trip_t {
-    char route_id[128];             // 経路ID
-    char service_id[128];           // 運行日ID
-    char trip_id[128];              // 便ID
-    char trip_headsign[256];        // 行き先名
-    char trip_short_name[256];      // 便名称
-    char direction_id[8];           // 0:復路（上り） 1:往路（下り）
-    char block_id[64];              // 便結合区分
-    char shape_id[64];              // 描画ID
-    char wheelchair_accessible[8];  // 車椅子利用区分
-    char bikes_allowed[8];          // 自転車持込区分
-    char jp_trip_desc[256];         // （追加JP）便情報
-    char jp_trip_desc_symbol[64];   // （追加JP）便記号
-    char jp_office_id[64];          // （追加JP）営業所ID
-    int lineno;                     // 行番号
+    char route_id[GTFS_ID_SIZE];        // 経路ID
+    char service_id[GTFS_ID_SIZE];      // 運行日ID
+    char trip_id[GTFS_ID_SIZE];         // 便ID
+    char trip_headsign[256];            // 行き先名
+    char trip_short_name[256];          // 便名称
+    char direction_id[8];               // 0:復路（上り） 1:往路（下り）
+    char block_id[GTFS_ID_SIZE];        // 便結合区分
+    char shape_id[GTFS_ID_SIZE];        // 描画ID
+    char wheelchair_accessible[8];      // 車椅子利用区分
+    char bikes_allowed[8];              // 自転車持込区分
+    char jp_trip_desc[256];             // （追加JP）便情報
+    char jp_trip_desc_symbol[64];       // （追加JP）便記号
+    char jp_office_id[GTFS_ID_SIZE];    // （追加JP）営業所ID
+    int lineno;                         // 行番号
 };
 
 // stop_times.txt
 struct stop_time_t {
-    char trip_id[128];              // 便ID
+    char trip_id[GTFS_ID_SIZE];     // 便ID
     char arrival_time[16];          // 到着時刻（HH:MM:SS）
     char departure_time[16];        // 出発時刻（HH:MM:SS）
-    char stop_id[64];               // 駅コード
+    char stop_id[GTFS_ID_SIZE];     // 駅コード
     char stop_sequence[16];         // 連番
     char stop_headsign[256];        // 停留所行き先
     char pickup_type[8];            // 乗車区分（0:通常の乗車地）
@@ -162,7 +164,7 @@ struct stop_time_t {
 
 // calendar.txt
 struct calendar_t {
-    char service_id[128];           // サービスID
+    char service_id[GTFS_ID_SIZE];  // サービスID
     char monday[8];                 // 月曜日(1 or 0)
     char tuesday[8];                // 火曜日(1 or 0)
     char wednesday[8];              // 水曜日(1 or 0)
@@ -177,7 +179,7 @@ struct calendar_t {
 
 // calendar_dates.txt
 struct calendar_date_t {
-    char service_id[128];           // サービスID
+    char service_id[GTFS_ID_SIZE];  // サービスID
     char date[16];                  // 日付
     char exception_type[8];         // 利用タイプ(1 or 2)
     int lineno;                     // 行番号
@@ -185,29 +187,29 @@ struct calendar_date_t {
 
 // fare_attributes.txt
 struct fare_attribute_t {
-    char fare_id[64];               // 運賃ID
+    char fare_id[GTFS_ID_SIZE];     // 運賃ID
     char price[64];                 // 運賃
     char currency_type[8];          // 通貨(JPY)
     char payment_method[8];         // 支払いタイミング
     char transfers[8];              // 乗換
-    char agency_id[64];             // 事業者ID（agency.txtで複数の事業者が定義された場合は必要）
+    char agency_id[GTFS_ID_SIZE];   // 事業者ID（agency.txtで複数の事業者が定義された場合は必要）
     char transfer_duration[16];     // 乗換有効期限
     int lineno;                     // 行番号
 };
 
 // fare_rules.txt
 struct fare_rule_t {
-    char fare_id[64];               // 運賃ID
-    char route_id[128];             // 経路ID
-    char origin_id[64];             // 乗車駅ゾーン
-    char destination_id[64];        // 降車駅ゾーン
-    char contains_id[64];           // 通過ゾーン
-    int lineno;                     // 行番号
+    char fare_id[GTFS_ID_SIZE];         // 運賃ID
+    char route_id[GTFS_ID_SIZE];        // 経路ID
+    char origin_id[GTFS_ID_SIZE];       // 乗車駅ゾーン
+    char destination_id[GTFS_ID_SIZE];  // 降車駅ゾーン
+    char contains_id[GTFS_ID_SIZE];     // 通過ゾーン
+    int lineno;                         // 行番号
 };
 
 // shapes.txt
 struct shape_t {
-    char shape_id[64];                  // 描画ID
+    char shape_id[GTFS_ID_SIZE];        // 描画ID
     char shape_pt_lat[64];              // 描画緯度
     char shape_pt_lon[64];              // 描画経度
     char shape_pt_sequence[16];         // 描画順序
@@ -217,7 +219,7 @@ struct shape_t {
 
 // frequencies.txt
 struct frequency_t {
-    char trip_id[128];                   // 便ID
+    char trip_id[GTFS_ID_SIZE];         // 便ID
     char start_time[16];                // 開始時刻
     char end_time[16];                  // 終了時刻
     char headway_secs[16];              // 運行間隔
@@ -227,8 +229,8 @@ struct frequency_t {
 
 // transfers.txt
 struct transfer_t {
-    char from_stop_id[64];              // 乗継元標柱ID
-    char to_stop_id[64];                // 乗継先標柱ID
+    char from_stop_id[GTFS_ID_SIZE];    // 乗継元標柱ID
+    char to_stop_id[GTFS_ID_SIZE];      // 乗継先標柱ID
     char transfer_type[8];              // 乗換タイプ
     char min_transfer_time[16];         // 乗継時間（秒）
     int lineno;                         // 行番号
@@ -247,7 +249,7 @@ struct feed_info_t {
 
 // translations.txt (langが"ja-Hrkt"のみ)
 struct translation_t {
-    char trans_id[256];             // 原語（キー）
+    char trans_id[GTFS_ID_SIZE];    // 原語（キー）
     char lang[16];                  // 言語
     char translation[512];          // 翻訳語
     int lineno;                     // 行番号
@@ -255,21 +257,21 @@ struct translation_t {
 
 // routes_jp.txt
 struct route_jp_t {
-    char route_id[128];                     // 経路ID
-    char route_update_date[64];             // ダイヤ改正日
-    char origin_stop[256];                  // 起点
-    char via_stop[256];                     // 経由地
-    char destination_stop[256];             // 終点
-    int lineno;                             // 行番号
+    char route_id[GTFS_ID_SIZE];    // 経路ID
+    char route_update_date[64];     // ダイヤ改正日
+    char origin_stop[256];          // 起点
+    char via_stop[256];             // 経由地
+    char destination_stop[256];     // 終点
+    int lineno;                     // 行番号
 };
 
 // office_jp.txt
 struct office_jp_t {
-    char office_id[64];                     // 営業所ID
-    char office_name[256];                  // 営業所名
-    char office_url[256];                   // 営業所URL
-    char office_phone[64];                  // 営業所電話番号
-    int lineno;                             // 行番号
+    char office_id[GTFS_ID_SIZE];   // 営業所ID
+    char office_name[256];          // 営業所名
+    char office_url[256];           // 営業所URL
+    char office_phone[64];          // 営業所電話番号
+    int lineno;                     // 行番号
 };
 
 struct gtfs_t {

@@ -85,12 +85,12 @@ int makedir(const char* dir)
         return 0;
     
     len = strlen(dir) + 1;
-    path = malloc(len + 1);
+    path = alloca(len + 1);
     strncpy(dtmp, dir, sizeof(dtmp));
     
 #ifdef _WIN32
     tok = strtok(dtmp, "\\");
-    snprintf(path, len, "\\%s", tok);
+    snprintf(path, len, "%s\\", tok);
 #else
     tok = strtok(dtmp, "/");
     snprintf(path, len, "/%s", tok);

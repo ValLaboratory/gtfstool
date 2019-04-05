@@ -37,7 +37,7 @@
 
 #ifdef _MAIN
 #define PROGRAM_NAME        "gtfstool"
-#define PROGRAM_VERSION     "0.2"
+#define PROGRAM_VERSION     "0.3"
 #endif
 
 #define GTFS_SUCCESS        0
@@ -165,6 +165,11 @@ int g_ignore_warning;
 extern
 #endif
 int g_calendar_dates_service_id_check;
+
+#ifndef _MAIN
+extern
+#endif
+int g_route_stop_pattern_valid;
 
 #ifndef _MAIN
 extern

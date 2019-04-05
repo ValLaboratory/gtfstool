@@ -19,6 +19,7 @@ $ gtfstool [アクション][オプション] GTFS-JPファイル名 ...
 [オプション]
     [-w] 整合性チェック時の警告を無視します
     [-i] チェック時にcalendar_dates.txtのservice_idがcalender.txtに存在するかチェックします
+    [-r] 同一経路で停車パターンが違う場合にエラーとしません(GTFS-JP Ver.2仕様)
     [-p proxy_server:port] プロキシサーバとポート番号を指定します
     [-e error_file] システムエラーを出力するファイルを指定します
     [-t] トレースモードをオンにして実行します

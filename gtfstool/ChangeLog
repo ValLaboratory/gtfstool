@@ -7,3 +7,9 @@
 * http(s)でのアクセスでプロキシサーバに対応しました。
     - プログラムの起動オプションに "-p proxy_server:port" を追加
 
+2019-04-05  Naoki YAMAMOTO  <yamamoto@val.co.jp>
+
+* release version 0.3.
+* GTFS-JPのIDの最大サイズを64バイトから128バイトに拡張しました。
+* 同一経路で停車パターンが違う場合でもエラーにしないオプションを追加しました。
+* 実行結果にfeed_publisher_nameを表示するようにしました。

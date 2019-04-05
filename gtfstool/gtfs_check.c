@@ -1392,21 +1392,25 @@ static int gtfs_route_stop_pattern_check()
                 continue;
             }
             if (first_stop_count != stop_count) {
-                int ret = gtfs_error("route_id(%s)の停車数が違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
+                if (! g_route_stop_pattern_valid) {
+                    int ret = gtfs_error("route_id(%s)の停車数が違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
                                      utf8_conv(route_id, (char*)alloca(256), 256));
-                if (ret < result)
-                    result = ret;
+                    if (ret < result)
+                        result = ret;
+                }
                 break;
             }
             for (j = 0; j < stop_count; j++) {
                 struct stop_time_t* fst = (struct stop_time_t*)vect_get(first_stop_time_tbl, j);
                 struct stop_time_t* st = (struct stop_time_t*)vect_get(stop_time_tbl, j);
                 if (strcmp(fst->stop_id, st->stop_id) != 0) {
-                    int ret = gtfs_error("route_id(%s)の停車パターンが違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
+                    if (! g_route_stop_pattern_valid) {
+                        int ret = gtfs_error("route_id(%s)の停車パターンが違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
                                          utf8_conv(route_id, (char*)alloca(256), 256));
-                    if (ret < result)
-                        result = ret;
-                    break;
+                        if (ret < result)
+                            result = ret;
+                        break;
+                    }
                 }
             }
         }

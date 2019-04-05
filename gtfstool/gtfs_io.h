@@ -249,7 +249,7 @@ struct feed_info_t {
 
 // translations.txt (langが"ja-Hrkt"のみ)
 struct translation_t {
-    char trans_id[GTFS_ID_SIZE];    // 原語（キー）
+    char trans_id[256];             // 原語（キー）
     char lang[16];                  // 言語
     char translation[512];          // 翻訳語
     int lineno;                     // 行番号

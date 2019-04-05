@@ -43,6 +43,7 @@ static void usage()
     fprintf(stdout, "options: [-w] 整合性チェック時の警告を無視します\n");
     fprintf(stdout, "         [-i] チェック時にcalendar_dates.txtのservice_idがcalender.txtに\n"
                     "              存在するかチェックします\n");
+    fprintf(stdout, "         [-r] 同一経路で停車パターンが違う場合にエラーとしません(Ver.2仕様)\n");
     fprintf(stdout, "         [-p proxy_server:port] プロキシサーバとポート番号を指定します\n");
     fprintf(stdout, "         [-e error_file] システムエラーを出力するファイルを指定します\n");
     fprintf(stdout, "         [-t] トレースモードをオンにして実行します\n");
@@ -311,6 +312,8 @@ static int args(int argc, const char * argv[])
                 g_ignore_warning = 1;
             } else if (strcmp(argv[i], "-i") == 0) {
                 g_calendar_dates_service_id_check = 1;
+            } else if (strcmp(argv[i], "-r") == 0) {
+                g_route_stop_pattern_valid = 1;
             } else if (strcmp(argv[i], "-s") == 0) {
                 if (i < argc-1) {
                     g_output_dir = argv[++i];
@@ -385,16 +388,23 @@ static void check_statistics_print()
         printf("%s", utf8_conv(agency->agency_name, (char*)alloca(256), 256));
     }
     printf("\n");
+    printf("Feed-Publisher: %s\n", utf8_conv(g_feed_info.feed_publisher_name, (char*)alloca(256), 256));
+
     printf("agency.txt: %d\n", vect_count(g_gtfs->agency_tbl));
     printf("agency_jp.txt: %d\n", vect_count(g_gtfs->agency_jp_tbl));
-    printf("routes.txt: %d\n", vect_count(g_gtfs->routes_tbl));
     printf("stops.txt: %d\n", vect_count(g_gtfs->stops_tbl));
+    printf("routes.txt: %d\n", vect_count(g_gtfs->routes_tbl));
+    printf("routes_jp.txt: %d\n", vect_count(g_gtfs->routes_jp_tbl));
     printf("trips.txt: %d\n", vect_count(g_gtfs->trips_tbl));
+    printf("office_jp.txt: %d\n", vect_count(g_gtfs->office_jp_tbl));
     printf("stop_times.txt: %d\n", vect_count(g_gtfs->stop_times_tbl));
     printf("calendar.txt: %d\n", vect_count(g_gtfs->calendar_tbl));
     printf("calendar_dates.txt: %d\n", vect_count(g_gtfs->calendar_dates_tbl));
     printf("fare_attributes.txt: %d\n", vect_count(g_gtfs->fare_attrs_tbl));
     printf("fare_rules.txt: %d\n", vect_count(g_gtfs->fare_rules_tbl));
+    printf("shapes.txt: %d\n", vect_count(g_gtfs->shapes_tbl));
+    printf("frequencies.txt: %d\n", vect_count(g_gtfs->frequencies_tbl));
+    printf("transfers.txt: %d\n", vect_count(g_gtfs->transfers_tbl));
     printf("translations.txt: %d\n", vect_count(g_gtfs->translations_tbl));
     printf("\n");
 

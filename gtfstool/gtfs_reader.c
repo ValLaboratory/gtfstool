@@ -30,6 +30,12 @@
 #define LF_STR      "\n"
 #define COMMA_CHAR  ','
 
+static void check_id_size(int kind, const char* id)
+{
+    if (strlen(id) > GTFS_ID_SIZE)
+        err_write("%s: [%s] size over.\n", g_gtfs_filename[kind], id);
+}
+
 static int find_label_index(char** label_list, const char* target_label)
 {
     if (label_list) {
@@ -85,6 +91,7 @@ static void gtfs_agency_reader(const char* csvptr, size_t size)
 
                     if (agency_id_index >= 0 && agency_id_index < n) {
                         char* p = quote(trim(list[agency_id_index]));
+                        check_id_size(AGENCY, p);
                         strncpy(agency->agency_id, p, sizeof(agency->agency_id));
                     }
                     if (agency_name_index >= 0 && agency_name_index < n) {
@@ -163,6 +170,7 @@ static void gtfs_agency_jp_reader(const char* csvptr, size_t size)
                     
                     if (agency_id_index >= 0 && agency_id_index < n) {
                         char* p = quote(trim(list[agency_id_index]));
+                        check_id_size(AGENCY_JP, p);
                         strncpy(agency_jp->agency_id, p, sizeof(agency_jp->agency_id));
                     }
                     if (agency_official_name_index >= 0 && agency_official_name_index < n) {
@@ -241,6 +249,7 @@ static void gtfs_stops_reader(const char* csvptr, size_t size)
 
                     if (stop_id_index >= 0 && stop_id_index < n) {
                         char* p = quote(trim(list[stop_id_index]));
+                        check_id_size(STOPS, p);
                         strncpy(stop->stop_id, p, sizeof(stop->stop_id));
                     }
                     if (stop_code_index >= 0 && stop_code_index < n) {
@@ -341,6 +350,7 @@ static void gtfs_routes_reader(const char* csvptr, size_t size)
 
                     if (route_id_index >= 0 && route_id_index < n) {
                         char* p = quote(trim(list[route_id_index]));
+                        check_id_size(ROUTES, p);
                         strncpy(route->route_id, p, sizeof(route->route_id));
                     }
                     if (agency_id_index >= 0 && agency_id_index < n) {
@@ -428,6 +438,7 @@ static void gtfs_routes_jp_reader(const char* csvptr, size_t size)
                     
                     if (route_id_index >= 0 && route_id_index < n) {
                         char* p = quote(trim(list[route_id_index]));
+                        check_id_size(ROUTES_JP, p);
                         strncpy(routejp->route_id, p, sizeof(routejp->route_id));
                     }
                     if (route_update_index >= 0 && route_update_index < n) {
@@ -503,6 +514,7 @@ static void gtfs_trips_reader(const char* csvptr, size_t size)
 
                     if (route_id_index >= 0 && route_id_index < n) {
                         char* p = quote(trim(list[route_id_index]));
+                        check_id_size(TRIPS, p);
                         strncpy(trip->route_id, p, sizeof(trip->route_id));
                     }
                     if (service_id_index >= 0 && service_id_index < n) {
@@ -598,6 +610,7 @@ static void gtfs_office_jp_reader(const char* csvptr, size_t size)
                     
                     if (office_id_index >= 0 && office_id_index < n) {
                         char* p = quote(trim(list[office_id_index]));
+                        check_id_size(OFFICE_JP, p);
                         strncpy(officejp->office_id, p, sizeof(officejp->office_id));
                     }
                     if (office_name_index >= 0 && office_name_index < n) {
@@ -666,6 +679,7 @@ static void gtfs_stop_times_reader(const char* csvptr, size_t size)
                     
                     if (trip_id_index >= 0 && trip_id_index < n) {
                         char* p = quote(trim(list[trip_id_index]));
+                        check_id_size(STOP_TIMES, p);
                         strncpy(st->trip_id, p, sizeof(st->trip_id));
                     }
                     if (arrival_time_index >= 0 && arrival_time_index < n) {
@@ -757,6 +771,7 @@ static void gtfs_calendar_reader(const char* csvptr, size_t size)
 
                     if (service_id_index >= 0 && service_id_index < n) {
                         char* p = quote(trim(list[service_id_index]));
+                        check_id_size(CALENDAR, p);
                         strncpy(cal->service_id, p, sizeof(cal->service_id));
                     }
                     if (monday_index >= 0 && monday_index < n) {
@@ -839,6 +854,7 @@ static void gtfs_calendar_dates_reader(const char* csvptr, size_t size)
                     
                     if (service_id_index >= 0 && service_id_index < n) {
                         char* p = quote(trim(list[service_id_index]));
+                        check_id_size(CALENDAR_DATES, p);
                         strncpy(cald->service_id, p, sizeof(cald->service_id));
                     }
                     if (date_index >= 0 && date_index < n) {
@@ -898,6 +914,7 @@ static void gtfs_fare_attributes_reader(const char* csvptr, size_t size)
                     
                     if (fare_id_index >= 0 && fare_id_index < n) {
                         char* p = quote(trim(list[fare_id_index]));
+                        check_id_size(FARE_ATTRIBUTES, p);
                         strncpy(fattr->fare_id, p, sizeof(fattr->fare_id));
                     }
                     if (price_index >= 0 && price_index < n) {
@@ -970,6 +987,7 @@ static void gtfs_fare_rules_reader(const char* csvptr, size_t size)
                     
                     if (fare_id_index >= 0 && fare_id_index < n) {
                         char* p = quote(trim(list[fare_id_index]));
+                        check_id_size(FARE_RULES, p);
                         strncpy(fare->fare_id, p, sizeof(fare->fare_id));
                     }
                     if (route_id_index >= 0 && route_id_index < n) {
@@ -1035,6 +1053,7 @@ static void gtfs_shapes_reader(const char* csvptr, size_t size)
                     
                     if (shape_id_index >= 0 && shape_id_index < n) {
                         char* p = quote(trim(list[shape_id_index]));
+                        check_id_size(SHAPES, p);
                         strncpy(shape->shape_id, p, sizeof(shape->shape_id));
                     }
                     if (shape_pt_lat_index >= 0 && shape_pt_lat_index < n) {
@@ -1099,6 +1118,7 @@ static void gtfs_frequencies_reader(const char* csvptr, size_t size)
                     
                     if (trip_id_index >= 0 && trip_id_index < n) {
                         char* p = quote(trim(list[trip_id_index]));
+                        check_id_size(FREQUENCIES, p);
                         strncpy(freq->trip_id, p, sizeof(freq->trip_id));
                     }
                     if (start_time_index >= 0 && start_time_index < n) {
@@ -1162,10 +1182,12 @@ static void gtfs_transfers_reader(const char* csvptr, size_t size)
                     
                     if (from_stop_id_index >= 0 && from_stop_id_index < n) {
                         char* p = quote(trim(list[from_stop_id_index]));
+                        check_id_size(TRANSFERS, p);
                         strncpy(transfer->from_stop_id, p, sizeof(transfer->from_stop_id));
                     }
                     if (to_stop_id_index >= 0 && to_stop_id_index < n) {
                         char* p = quote(trim(list[to_stop_id_index]));
+                        check_id_size(TRANSFERS, p);
                         strncpy(transfer->to_stop_id, p, sizeof(transfer->to_stop_id));
                     }
                     if (transfer_type_index >= 0 && transfer_type_index < n) {

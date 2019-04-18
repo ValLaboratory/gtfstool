@@ -417,6 +417,7 @@ int gtfs_split()
 
     for (i = 0; i < count; i++) {
         struct agency_t* agency;
+        char agency_name[256];
         char zipname[MAX_PATH], datebuf[16];
 
         _ext_gtfs = gtfs_alloc();
@@ -431,7 +432,8 @@ int gtfs_split()
         gtfs_feed_writer(g_output_dir, _ext_gtfs);
 
         snprintf(zipname, sizeof(zipname), "gtfs_%s_%s.zip",
-                 agency->agency_name, todays_date(datebuf, sizeof(datebuf), ""));
+                 utf8_conv(agency->agency_name, agency_name, sizeof(agency_name)),
+                 todays_date(datebuf, sizeof(datebuf), ""));
         gtfs_zip_archive_writer(g_output_dir, zipname, _ext_gtfs);
 
         gtfs_feed_delete(g_output_dir, _ext_gtfs);

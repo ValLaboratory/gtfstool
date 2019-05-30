@@ -1432,6 +1432,24 @@ static char* get_zone_id(const char* stop_id)
     return stop->zone_id;
 }
 
+static int is_same_stop(const char* origin_stop_id, const char* dest_stop_id)
+{
+    struct stop_t* origin_stop;
+    struct stop_t* dest_stop;
+
+    if (strcmp(origin_stop_id, dest_stop_id) == 0)
+        return 1;
+
+    origin_stop = hash_get(g_gtfs_hash->stops_htbl, origin_stop_id);
+    dest_stop = hash_get(g_gtfs_hash->stops_htbl, dest_stop_id);
+    if (origin_stop == NULL || dest_stop == NULL)
+        return 0;
+
+    if (strcmp(origin_stop->stop_name, dest_stop->stop_name) == 0)
+        return 1;
+    return 0;
+}
+
 static int is_pickup_stop(struct stop_time_t* st)
 {
     if (strlen(st->pickup_type) > 0) {
@@ -1448,6 +1466,53 @@ static int is_dropoff_stop(struct stop_time_t* st)
             return 0;
     }
     return 1;   // 降車可能
+}
+
+static struct fare_rule_t* get_another_fare_rule(struct trip_t* trip,
+                                                 const char* origin_stop_id,
+                                                 const char* dest_stop_id)
+{
+    struct stop_t* origin_stop;
+    struct stop_t* dest_stop;
+    struct stop_t** stop_list;
+    struct fare_rule_t* fare_rule = NULL;
+    int i, j;
+
+#if 0
+    if (strcmp(origin_stop_id, "1001_01") == 0 && strcmp(dest_stop_id, "1006_02") == 0)
+        printf("target\n");
+#endif
+
+    origin_stop = hash_get(g_gtfs_hash->stops_htbl, origin_stop_id);
+    dest_stop = hash_get(g_gtfs_hash->stops_htbl, dest_stop_id);
+    if (origin_stop == NULL || dest_stop == NULL)
+        return NULL;
+    
+    stop_list = (struct stop_t**)hash_list(g_gtfs_hash->stops_htbl);
+
+    for (i = 0; stop_list[i]; i++) {
+        if (strcmp(origin_stop->stop_name, stop_list[i]->stop_name) == 0) {
+            for (j = 0; stop_list[j]; j++) {
+                if (strcmp(dest_stop->stop_name, stop_list[j]->stop_name) == 0) {
+                    char hkey[128];
+                
+                    fare_rule_key(trip->route_id, stop_list[i]->zone_id, stop_list[j]->zone_id, hkey);
+                    fare_rule = hash_get(g_gtfs_hash->fare_rules_htbl, hkey);
+                    if (fare_rule)
+                        goto final;
+                    // 発着の逆も探す
+                    fare_rule_key(trip->route_id, stop_list[j]->zone_id, stop_list[i]->zone_id, hkey);
+                    fare_rule = hash_get(g_gtfs_hash->fare_rules_htbl, hkey);
+                    if (fare_rule)
+                        goto final;
+                }
+            }
+        }
+    }
+
+final:
+    hash_list_free((void**)stop_list);
+    return fare_rule;
 }
 
 static char* get_dist_traveled(struct stop_time_t* st)
@@ -1515,7 +1580,7 @@ static int gtfs_od_fare_check()
                 if (is_pickup_stop(origin_st) == 0 || is_dropoff_stop(dest_st) == 0)
                     continue;
                 // 発着が同じ駅は運賃が登録されていないので無視する（「の」の字路線）
-                if (strcmp(origin_st->stop_id, dest_st->stop_id) == 0)
+                if (is_same_stop(origin_st->stop_id, dest_st->stop_id))
                     continue;
                 // 路線+区間で運賃を検索
                 fare_rule_key(trip->route_id, origin_zone, dest_zone, hkey);
@@ -1528,6 +1593,11 @@ static int gtfs_od_fare_check()
                         // 均一料金の可能性があるので路線のみで検索
                         fare_rule_key(trip->route_id, "", "", hkey);
                         fare_rule = hash_get(g_gtfs_hash->fare_rules_htbl, hkey);
+                    }
+                    if (! fare_rule) {
+                        // 往路と復路の標柱で別のzone_idが採番されている可能性があるためstop_nameが同じ別のzone_idで検索してみる
+                        // また往路と復路のどちらかしか登録されていない場合もあるので発着を入れ替えて検索する
+                        fare_rule = get_another_fare_rule(trip, origin_st->stop_id, dest_st->stop_id);
                     }
                 }
                 if (! fare_rule) {

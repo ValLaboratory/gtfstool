@@ -1685,6 +1685,7 @@ static int gtfs_stop_name_yomi_check()
         struct stop_t* stop;
         
         stop = (struct stop_t*)vect_get(g_gtfs->stops_tbl, i);
+        // 親子関係の場合は子のstop_nameはチェックしない。
         if (strlen(stop->stop_name) > 0 && strlen(stop->parent_station) == 0) {
             struct translation_t* trans = hash_get(g_gtfs_hash->translations_htbl, stop->stop_name);
             if (trans) {

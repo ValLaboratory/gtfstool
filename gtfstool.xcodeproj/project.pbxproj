@@ -14,8 +14,8 @@
 		CE55B8C1219A5F3A00B45F5B /* gtfs_split.c in Sources */ = {isa = PBXBuildFile; fileRef = CE55B8BF219A5F3A00B45F5B /* gtfs_split.c */; };
 		CE55FADC21795A7000DF364B /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CE55FADB21795A7000DF364B /* main.c */; };
 		CE55FB092179A99D00DF364B /* gtfs_reader.c in Sources */ = {isa = PBXBuildFile; fileRef = CE55FB082179A99D00DF364B /* gtfs_reader.c */; };
-		CE79C8A6221CE7060044A8D3 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE79C8A5221CE7060044A8D3 /* libcrypto.a */; };
-		CE79C8A8221CE7180044A8D3 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE79C8A7221CE7180044A8D3 /* libssl.a */; };
+		CE876D39238292E20000A0D0 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE876D38238292E20000A0D0 /* libssl.a */; };
+		CE876D3B238293020000A0D0 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE876D3A238293020000A0D0 /* libcrypto.a */; };
 		CE9CBAF3217EDC1500785E30 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9CBAF2217EDC1500785E30 /* miniz.c */; };
 		CECD9C4E219AC6C60050ED31 /* merge_config.c in Sources */ = {isa = PBXBuildFile; fileRef = CECD9C4D219AC6C60050ED31 /* merge_config.c */; };
 		CECD9C51219C17E00050ED31 /* gtfs_merge.c in Sources */ = {isa = PBXBuildFile; fileRef = CECD9C50219C17E00050ED31 /* gtfs_merge.c */; };
@@ -83,8 +83,8 @@
 		CE55FADB21795A7000DF364B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		CE55FAE4217992F700DF364B /* gtfstool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gtfstool.h; sourceTree = "<group>"; };
 		CE55FB082179A99D00DF364B /* gtfs_reader.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gtfs_reader.c; sourceTree = "<group>"; };
-		CE79C8A5221CE7060044A8D3 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2k/lib/libcrypto.a; sourceTree = "<group>"; };
-		CE79C8A7221CE7180044A8D3 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../../../../../usr/local/Cellar/openssl/1.0.2k/lib/libssl.a; sourceTree = "<group>"; };
+		CE876D38238292E20000A0D0 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "../../../../../usr/local/Cellar/openssl@1.1/1.1.1d/lib/libssl.a"; sourceTree = "<group>"; };
+		CE876D3A238293020000A0D0 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../../../usr/local/Cellar/openssl@1.1/1.1.1d/lib/libcrypto.a"; sourceTree = "<group>"; };
 		CE9CBAF2217EDC1500785E30 /* miniz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
 		CEAF9542223217380051D480 /* merge.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = merge.conf; sourceTree = "<group>"; };
 		CEAF9543223217380051D480 /* memo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memo.txt; sourceTree = "<group>"; };
@@ -133,8 +133,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE79C8A8221CE7180044A8D3 /* libssl.a in Frameworks */,
-				CE79C8A6221CE7060044A8D3 /* libcrypto.a in Frameworks */,
+				CE876D3B238293020000A0D0 /* libcrypto.a in Frameworks */,
+				CE876D39238292E20000A0D0 /* libssl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,8 +210,8 @@
 		CE9CBAE9217EC67800785E30 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CE79C8A7221CE7180044A8D3 /* libssl.a */,
-				CE79C8A5221CE7060044A8D3 /* libcrypto.a */,
+				CE876D3A238293020000A0D0 /* libcrypto.a */,
+				CE876D38238292E20000A0D0 /* libssl.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -490,7 +490,10 @@
 					"DEBUG=1",
 					HAVE_OPENSSL,
 				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/Cellar/openssl@1.1/1.1.1d/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				"MTL_ENABLE_DEBUG_INFO[arch=*]" = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -503,7 +506,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_OPENSSL;
 				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = HAVE_OPENSSL;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/Cellar/openssl@1.1/1.1.1d/lib",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

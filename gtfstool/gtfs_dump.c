@@ -50,6 +50,8 @@ static void dump_stop_times(int cols, int rows, struct vector_t** v_tbl)
                     struct stop_t* stop;
                     
                     stop = (struct stop_t*)vect_get(vt, y);
+                    if (strlen(stop->parent_station) > 0)
+                        stop = (struct stop_t*)hash_get(g_gtfs_hash->stops_htbl, stop->parent_station);
                     printf("%s", utf8_conv(stop->stop_name, (char*)alloca(256), 256));
                 } else {
                     struct stop_time_t* st;

@@ -1395,8 +1395,9 @@ static int gtfs_route_stop_pattern_check()
             }
             if (first_stop_count != stop_count) {
                 if (! g_route_stop_pattern_valid) {
-                    int ret = gtfs_error("route_id(%s)の停車数が違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
-                                     utf8_conv(route_id, (char*)alloca(256), 256));
+                    int ret = gtfs_error("route_id(%s):trip(%s)の停車数が違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
+                                         utf8_conv(route_id, (char*)alloca(256), 256),
+                                         utf8_conv(trip->trip_id, (char*)alloca(256), 256));
                     if (ret < result)
                         result = ret;
                 }
@@ -1407,8 +1408,10 @@ static int gtfs_route_stop_pattern_check()
                 struct stop_time_t* st = (struct stop_time_t*)vect_get(stop_time_tbl, j);
                 if (strcmp(fst->stop_id, st->stop_id) != 0) {
                     if (! g_route_stop_pattern_valid) {
-                        int ret = gtfs_error("route_id(%s)の停車パターンが違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
-                                         utf8_conv(route_id, (char*)alloca(256), 256));
+                        int ret = gtfs_error("route_id(%s):(first_trip(%s):trip(%s))の停車パターンが違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
+                                             utf8_conv(route_id, (char*)alloca(256), 256),
+                                             utf8_conv(fst->trip_id, (char*)alloca(256), 256),
+                                             utf8_conv(st->trip_id, (char*)alloca(256), 256));
                         if (ret < result)
                             result = ret;
                         break;

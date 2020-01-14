@@ -2,7 +2,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2018-2019 Val Laboratory Corporation.
+ * Copyright (c) 2018-2020 Val Laboratory Corporation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

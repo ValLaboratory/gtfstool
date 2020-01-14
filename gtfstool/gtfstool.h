@@ -2,7 +2,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2018-2019 Val Laboratory Corporation.
+ * Copyright (c) 2018-2020 Val Laboratory Corporation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@
 
 #ifdef _MAIN
 #define PROGRAM_NAME        "gtfstool"
-#define PROGRAM_VERSION     "0.3"
+#define PROGRAM_VERSION     "0.4"
 #endif
 
 #define GTFS_SUCCESS        0
@@ -45,11 +45,12 @@
 #define GTFS_ERROR          (-1)
 #define GTFS_WARNING        1
 
-#define GTFS_CHECK_MODE     1
-#define GTFS_SPLIT_MODE     2
-#define GTFS_MERGE_MODE     3
-#define GTFS_DUMP_MODE      4
-#define GTFS_VERSION_MODE   9
+#define GTFS_CHECK_MODE         1
+#define GTFS_SPLIT_MODE         2
+#define GTFS_MERGE_MODE         3
+#define GTFS_DUMP_MODE          4
+#define GTFS_ROUTE_BRANCH_MODE  5
+#define GTFS_VERSION_MODE       9
 
 struct merge_gtfs_prefix_t {
     char gtfs_file_name[MAX_PATH];
@@ -275,6 +276,11 @@ extern
 #endif
 unsigned int g_proxy_port;
 
+#ifndef _MAIN
+extern
+#endif
+int g_branch_routes_count;
+
 // prototypes
 #ifdef __cplusplus
 extern "C" {
@@ -297,6 +303,9 @@ char* utf8_conv(const char* str, char* enc_buf, int enc_bufsize);
 
 // gtfs_check.c
 char* fare_rule_key(const char* route_id, const char* origin_id, const char* dest_id, char* key);
+int gtfs_hash_table_key_check(void);
+int gtfs_vehicle_timetable(void);
+int gtfs_route_trips(void);
 int gtfs_check(void);
 
 // gtfs_split.c
@@ -307,6 +316,9 @@ int gtfs_merge(void);
 
 // gtfs_dump.c
 int gtfs_dump(void);
+
+// gtfs_route_branch.c
+int gtfs_route_branch(void);
 
 #ifdef __cplusplus
 }

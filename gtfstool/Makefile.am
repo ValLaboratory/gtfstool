@@ -9,6 +9,7 @@ gtfstool_SOURCES=	main.c \
 					gtfs_split.c \
 					gtfs_check.c \
 					gtfs_merge.c \
+					gtfs_route_branch.c \
 					gtfs_writer.c \
 					miniz.c \
 					base/aiueo.h \

@@ -2,7 +2,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2018-2019 Val Laboratory Corporation.
+ * Copyright (c) 2018-2020 Val Laboratory Corporation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -534,7 +534,7 @@ static int gtfs_hash_routes_jp_table()
     return result;
 }
 
-static int gtfs_hash_table_key_check()
+int gtfs_hash_table_key_check()
 {
     int result = 0;
     int ret;
@@ -1215,7 +1215,7 @@ static int trip_timetable_put_index(struct vector_t* times, struct stop_time_t* 
 }
 
 // 通過時刻表を作成
-static int gtfs_vehicle_timetable()
+int gtfs_vehicle_timetable()
 {
     int result = 0;
     int count, i;
@@ -1255,7 +1255,7 @@ static int gtfs_vehicle_timetable()
 }
 
 // 経路ごとの停車パターン(trip)を作成
-static int gtfs_route_trips()
+int gtfs_route_trips()
 {
     int result = 0;
     int count, i;

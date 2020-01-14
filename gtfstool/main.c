@@ -2,7 +2,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2018-2019 Val Laboratory Corporation.
+ * Copyright (c) 2018-2020 Val Laboratory Corporation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@
 static void version()
 {
     fprintf(stdout, "%s version %s\n", PROGRAM_NAME, PROGRAM_VERSION);
-    fprintf(stdout, "Copyright (c) 2018-2019 Val Laboratory Corporation.\n");
+    fprintf(stdout, "Copyright (c) 2018-2020 Val Laboratory Corporation.\n");
 }
 
 static void usage()
@@ -39,6 +39,7 @@ static void usage()
     fprintf(stdout, "         [-d] GTFS-JPのルート別にバス時刻表を表示します\n");
     fprintf(stdout, "         [-s output_dir] 複数のagencyを分割します\n");
     fprintf(stdout, "         [-m merge.conf] 複数のGTFS-JPを一つにマージします\n");
+    fprintf(stdout, "         [-b output_dir] 停車パターンが違うroute_idを複数に分割します\n");
     fprintf(stdout, "         [-v] プログラムバージョンを表示します\n");
     fprintf(stdout, "options: [-w] 整合性チェック時の警告を無視します\n");
     fprintf(stdout, "         [-i] チェック時にcalendar_dates.txtのservice_idがcalender.txtに\n"
@@ -332,6 +333,14 @@ static int args(int argc, const char * argv[])
                 }
             } else if (strcmp(argv[i], "-d") == 0) {
                 g_exec_mode = GTFS_DUMP_MODE;
+            } else if (strcmp(argv[i], "-b") == 0) {
+                if (i < argc-1) {
+                    g_output_dir = argv[++i];
+                    g_exec_mode = GTFS_ROUTE_BRANCH_MODE;
+                } else {
+                    usage();
+                    return 1;
+                }
             } else if (strcmp(argv[i], "-v") == 0) {
                 g_exec_mode = GTFS_VERSION_MODE;
             } else {
@@ -441,6 +450,14 @@ static void merge_statistics_print()
     TRACE("%s", "-------------------- END --------------------\n\n");
 }
 
+static void branch_routes_statistics_print()
+{
+    printf("gtfs(jp): %s\n", g_gtfs_zip);
+    printf("branch routes count: %d\n", g_branch_routes_count);
+    process_time_print();
+    TRACE("%s", "-------------------- END --------------------\n\n");
+}
+
 static int merge_mode()
 {
     TRACE("%s\n", "*GTFS MERGE START*");
@@ -459,7 +476,8 @@ static int merge_mode()
 static int is_skip_argument(const char* argv)
 {
     if (strcmp(argv, "-s") == 0 || strcmp(argv, "-m") == 0 ||
-        strcmp(argv, "-e") == 0 || strcmp(argv, "-p") == 0)
+        strcmp(argv, "-e") == 0 || strcmp(argv, "-p") == 0 ||
+        strcmp(argv, "-b") == 0)
         return 1;
     return 0;
 }
@@ -483,6 +501,29 @@ static void dump_mode(int argc, const char* argv[])
         g_ignore_warning = 1;
         if (gtfs_check() == 0)
             gtfs_dump();
+        final_gtfs();
+    }
+}
+
+static void route_branch_mode(int argc, const char* argv[])
+{
+    int i;
+    
+    TRACE("%s\n", "*GTFS ROUTE BRANCH MODE START*");
+    g_start_time = system_time();
+    
+    for (i = 1; i < argc; i++) {
+        if (*argv[i] == '-') {
+            if (is_skip_argument(argv[i]))
+                i++;    // skip argument
+            continue;
+        }
+        
+        init_gtfs();
+        strcpy(g_gtfs_zip, argv[i]);
+        g_ignore_warning = 1;
+        if (gtfs_route_branch() == 0)
+            branch_routes_statistics_print();
         final_gtfs();
     }
 }
@@ -527,6 +568,8 @@ int main(int argc, const char * argv[])
             return 1;
     } else if (g_exec_mode == GTFS_DUMP_MODE) {
         dump_mode(argc, argv);
+    } else if (g_exec_mode == GTFS_ROUTE_BRANCH_MODE) {
+        route_branch_mode(argc, argv);
     } else if (g_exec_mode == GTFS_VERSION_MODE) {
         version();
     } else {

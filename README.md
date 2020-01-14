@@ -15,6 +15,7 @@ $ gtfstool [アクション][オプション] GTFS-JPファイル名 ...
     [-d] GTFS-JPのルート別にバス時刻表を表示します
     [-s output_dir] 複数のagencyを分割します
     [-m merge.conf] 複数のGTFS-JPを一つにマージします
+    [-b output_dir] 停車パターンが違うroute_idを複数に分割します
     [-v] プログラムバージョンを表示します
 [オプション]
     [-w] 整合性チェック時の警告を無視します

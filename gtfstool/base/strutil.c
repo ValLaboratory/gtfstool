@@ -221,8 +221,8 @@ APIEXPORT int indexof(const char* str, const char target)
                     bytes = iskanji(str);
                     str += bytes;
                     i += bytes;
-                } while (*str != '"');
-                bytes = 1;
+                } while (*str && *str != '"');
+                bytes = (*str)? 1 : 0;
             }
         }
         str += bytes;
@@ -371,8 +371,8 @@ APIEXPORT char** split(char* str, char delim)
                 do {
                     bytes = iskanji(p);
                     p += bytes;
-                } while (*p != '"');
-                bytes = 1;
+                } while (*p && *p != '"');
+                bytes = (*p)? 1 : 0;
             }
         }
         p += bytes;

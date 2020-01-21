@@ -34,11 +34,6 @@ static int is_necessary_quote(const char* str)
     int index;
 
     index = indexof(str, ',');
-    if (index < 0)
-        index = indexof(str, '\"');
-    if (index < 0)
-        index = indexof(str, ' ');
-
     return (index < 0)? 0 : 1;
 }
 

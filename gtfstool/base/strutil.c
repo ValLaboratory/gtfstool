@@ -485,16 +485,16 @@ APIEXPORT char* quote(char* str)
 {
     int len;
     char* p;
-
-    len = (int)strlen(str);
-    p = str + len  - 1;
-    if (*p == '\"') {
-        *p = '\0';
-        len--;
+    
+    if (*str == '\"') {
+        len = (int)strlen(str);
+        p = str + len  - 1;
+        if (*p == '\"') {
+            *p = '\0';
+            len--;
+            memmove(str, str+1, len);
+        }
     }
-
-    if (*str == '\"')
-        memmove(str, str+1, len);
     return str;
 }
 

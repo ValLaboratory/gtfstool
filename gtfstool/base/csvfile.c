@@ -79,6 +79,7 @@ static long csv_filesize(int fd)
 
 char* csv_alloc(const char* file_name)
 {
+    int fd = -1;
     struct stat st;
     size_t filesize;
     char* buf;
@@ -87,18 +88,17 @@ char* csv_alloc(const char* file_name)
         return NULL;
 
     if (file_name != NULL && *file_name != '\0') {
-        _csv_fd = FILE_OPEN(file_name, O_RDONLY);
-        if (_csv_fd < 0) {
+        fd = FILE_OPEN(file_name, O_RDONLY);
+        if (fd < 0) {
             fprintf(stderr, "csv file can't open [%d]: ", errno);
             perror("");
         }
     }
-    filesize = csv_filesize(_csv_fd);
+    filesize = csv_filesize(fd);
     buf = malloc(filesize+1);
-    FILE_READ(_csv_fd, buf, filesize);
+    FILE_READ(fd, buf, filesize);
     buf[filesize] = '\0';
-    FILE_CLOSE(_csv_fd);
-    _csv_fd = -1;
+    FILE_CLOSE(fd);
     return buf;
 }
 

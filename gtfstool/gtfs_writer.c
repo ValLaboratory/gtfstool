@@ -22,7 +22,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "gtfstool.h"
+#include <stdio.h>
+#include "base/common.h"
+#include "base/file.h"
+#include "base/csvfile.h"
+#include "gtfs_io.h"
+#include "gtfs_var.h"
 
 #define MINIZ_HEADER_FILE_ONLY
 #include "miniz.c"
@@ -61,7 +66,6 @@ static void gtfs_agency_writer(const char* dir, struct vector_t* tbl)
 
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[AGENCY]);
-    TRACE("%s ... ", csvpath);
 
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -84,7 +88,6 @@ static void gtfs_agency_writer(const char* dir, struct vector_t* tbl)
     }
 
     csv_finalize();
-    TRACE("%s\n", "done");
 }
 
 static void gtfs_agency_jp_writer(const char* dir, struct vector_t* tbl)
@@ -101,7 +104,6 @@ static void gtfs_agency_jp_writer(const char* dir, struct vector_t* tbl)
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[AGENCY_JP]);
-    TRACE("%s ... ", csvpath);
 
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -129,7 +131,6 @@ static void gtfs_agency_jp_writer(const char* dir, struct vector_t* tbl)
     }
     
     csv_finalize();
-    TRACE("%s\n", "done");
 }
 
 static void gtfs_stops_writer(const char* dir, struct vector_t* tbl)
@@ -139,7 +140,6 @@ static void gtfs_stops_writer(const char* dir, struct vector_t* tbl)
 
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[STOPS]);
-    TRACE("%s ... ", csvpath);
 
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -167,7 +167,6 @@ static void gtfs_stops_writer(const char* dir, struct vector_t* tbl)
     }
 
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_routes_writer(const char* dir, struct vector_t* tbl)
@@ -177,7 +176,6 @@ static void gtfs_routes_writer(const char* dir, struct vector_t* tbl)
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[ROUTES]);
-    TRACE("%s ... ", csvpath);
 
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -207,7 +205,6 @@ static void gtfs_routes_writer(const char* dir, struct vector_t* tbl)
     }
 
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_trips_writer(const char* dir, struct vector_t* tbl)
@@ -218,7 +215,6 @@ static void gtfs_trips_writer(const char* dir, struct vector_t* tbl)
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[TRIPS]);
-    TRACE("%s ... ", csvpath);
     
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -250,7 +246,6 @@ static void gtfs_trips_writer(const char* dir, struct vector_t* tbl)
     }
     
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_stop_times_writer(const char* dir, struct vector_t* tbl)
@@ -260,7 +255,6 @@ static void gtfs_stop_times_writer(const char* dir, struct vector_t* tbl)
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[STOP_TIMES]);
-    TRACE("%s ... ", csvpath);
     
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -286,7 +280,6 @@ static void gtfs_stop_times_writer(const char* dir, struct vector_t* tbl)
     }
     
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_calendar_writer(const char* dir, struct vector_t* tbl)
@@ -296,7 +289,6 @@ static void gtfs_calendar_writer(const char* dir, struct vector_t* tbl)
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[CALENDAR]);
-    TRACE("%s ... ", csvpath);
     
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -320,7 +312,6 @@ static void gtfs_calendar_writer(const char* dir, struct vector_t* tbl)
     }
     
     csv_finalize();
-    TRACE("%s\n", "done");
 }
 
 static void gtfs_calendar_dates_writer(const char* dir, struct vector_t* tbl)
@@ -330,7 +321,6 @@ static void gtfs_calendar_dates_writer(const char* dir, struct vector_t* tbl)
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[CALENDAR_DATES]);
-    TRACE("%s ... ", csvpath);
     
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -349,7 +339,6 @@ static void gtfs_calendar_dates_writer(const char* dir, struct vector_t* tbl)
     }
     
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_fare_attributes_writer(const char* dir, struct vector_t* tbl)
@@ -359,7 +348,6 @@ static void gtfs_fare_attributes_writer(const char* dir, struct vector_t* tbl)
 
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[FARE_ATTRIBUTES]);
-    TRACE("%s ... ", csvpath);
 
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -380,7 +368,6 @@ static void gtfs_fare_attributes_writer(const char* dir, struct vector_t* tbl)
     }
 
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_fare_rules_writer(const char* dir, struct vector_t* tbl)
@@ -390,7 +377,6 @@ static void gtfs_fare_rules_writer(const char* dir, struct vector_t* tbl)
 
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[FARE_RULES]);
-    TRACE("%s ... ", csvpath);
 
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -409,7 +395,6 @@ static void gtfs_fare_rules_writer(const char* dir, struct vector_t* tbl)
     }
 
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_shapes_writer(const char* dir, struct vector_t* tbl)
@@ -419,7 +404,6 @@ static void gtfs_shapes_writer(const char* dir, struct vector_t* tbl)
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[SHAPES]);
-    TRACE("%s ... ", csvpath);
     
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -439,7 +423,6 @@ static void gtfs_shapes_writer(const char* dir, struct vector_t* tbl)
     }
     
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_frequencies_writer(const char* dir, struct vector_t* tbl)
@@ -449,7 +432,6 @@ static void gtfs_frequencies_writer(const char* dir, struct vector_t* tbl)
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[FREQUENCIES]);
-    TRACE("%s ... ", csvpath);
     
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -469,7 +451,6 @@ static void gtfs_frequencies_writer(const char* dir, struct vector_t* tbl)
     }
     
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_transfers_writer(const char* dir, struct vector_t* tbl)
@@ -479,7 +460,6 @@ static void gtfs_transfers_writer(const char* dir, struct vector_t* tbl)
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[TRANSFERS]);
-    TRACE("%s ... ", csvpath);
     
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -498,7 +478,6 @@ static void gtfs_transfers_writer(const char* dir, struct vector_t* tbl)
     }
     
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_feed_info_writer(const char* dir, struct feed_info_t* feed_info)
@@ -514,7 +493,6 @@ static void gtfs_feed_info_writer(const char* dir, struct feed_info_t* feed_info
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[FEED_INFO]);
-    TRACE("%s ... ", csvpath);
     
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -535,7 +513,6 @@ static void gtfs_feed_info_writer(const char* dir, struct feed_info_t* feed_info
               CRLF);
     
     csv_finalize();
-    TRACE("%s\n", "done");
 }
 
 static void gtfs_translations_writer(const char* dir, struct vector_t* tbl)
@@ -545,7 +522,6 @@ static void gtfs_translations_writer(const char* dir, struct vector_t* tbl)
 
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[TRANSLATIONS]);
-    TRACE("%s ... ", csvpath);
 
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -569,7 +545,6 @@ static void gtfs_translations_writer(const char* dir, struct vector_t* tbl)
     }
 
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_routes_jp_writer(const char* dir, struct vector_t* tbl)
@@ -579,7 +554,6 @@ static void gtfs_routes_jp_writer(const char* dir, struct vector_t* tbl)
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[ROUTES_JP]);
-    TRACE("%s ... ", csvpath);
     
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -598,7 +572,6 @@ static void gtfs_routes_jp_writer(const char* dir, struct vector_t* tbl)
     }
     
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 static void gtfs_office_jp_writer(const char* dir, struct vector_t* tbl)
@@ -608,7 +581,6 @@ static void gtfs_office_jp_writer(const char* dir, struct vector_t* tbl)
     
     strcpy(csvpath, dir);
     catpath(csvpath, g_gtfs_filename[OFFICE_JP]);
-    TRACE("%s ... ", csvpath);
     
     csv_initialize(csvpath);
     csv_write("%s%s",
@@ -630,7 +602,6 @@ static void gtfs_office_jp_writer(const char* dir, struct vector_t* tbl)
     }
     
     csv_finalize();
-    TRACE("%s[%d]\n", "done", count);
 }
 
 void gtfs_feed_writer(const char* dir, struct gtfs_t* gtfs)

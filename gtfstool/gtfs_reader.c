@@ -22,7 +22,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include "gtfstool.h"
+#include <stdio.h>
+#include "base/common.h"
+#include "base/file.h"
+#include "base/csvfile.h"
+#include "gtfs_io.h"
+#include "gtfs_var.h"
 
 #define MINIZ_HEADER_FILE_ONLY
 #include "miniz.c"

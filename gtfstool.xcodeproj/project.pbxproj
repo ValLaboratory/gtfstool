@@ -90,6 +90,7 @@
 		CE9F2CCF23C849BF00AA80E5 /* gtfs_route_branch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfs_route_branch.c; sourceTree = "<group>"; };
 		CEAF9542223217380051D480 /* merge.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = merge.conf; sourceTree = "<group>"; };
 		CEAF9543223217380051D480 /* memo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memo.txt; sourceTree = "<group>"; };
+		CEC66BB1240DF8F800DB3889 /* gtfs_var.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gtfs_var.h; sourceTree = "<group>"; };
 		CECD9C4D219AC6C60050ED31 /* merge_config.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = merge_config.c; sourceTree = "<group>"; };
 		CECD9C50219C17E00050ED31 /* gtfs_merge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gtfs_merge.c; sourceTree = "<group>"; };
 		CED14501221BBCF300F359F3 /* zlibutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zlibutil.h; sourceTree = "<group>"; };
@@ -203,6 +204,7 @@
 				CE351AF522164EB900B8BD1C /* gtfs_dump.c */,
 				CE9F2CCF23C849BF00AA80E5 /* gtfs_route_branch.c */,
 				CE12A6A2221A6EF4009BF3E7 /* gtfs_io.h */,
+				CEC66BB1240DF8F800DB3889 /* gtfs_var.h */,
 				CE55FB082179A99D00DF364B /* gtfs_reader.c */,
 				CE4E89A721928CF200D760CE /* gtfs_writer.c */,
 				CE55FADB21795A7000DF364B /* main.c */,
@@ -288,7 +290,7 @@
 		CE55FAD021795A7000DF364B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "YAMAMOTO Naoki";
 				TargetAttributes = {
 					CE55FAD721795A7000DF364B = {
@@ -302,6 +304,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = CE55FACF21795A7000DF364B;
 			productRefGroup = CE55FAD921795A7000DF364B /* Products */;
@@ -489,6 +492,7 @@
 		CE55FAE021795A7000DF364B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -507,6 +511,7 @@
 		CE55FAE121795A7000DF364B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_OPENSSL;
 				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = HAVE_OPENSSL;

@@ -1,6 +1,7 @@
 bin_PROGRAMS=gtfstool
 gtfstool_SOURCES=	main.c \
 					gtfs_io.h \
+                    gtfs_var.h \
 					gtfstool.h \
 					gtfs_dump.c \
 					gtfs_reader.c \

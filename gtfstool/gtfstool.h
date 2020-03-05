@@ -30,6 +30,7 @@
 #include "base/file.h"
 #include "base/csvfile.h"
 #include "gtfs_io.h"
+#include "gtfs_var.h"
 
 #ifndef _WIN32
 #define MAX_PATH  PATH_MAX
@@ -37,7 +38,7 @@
 
 #ifdef _MAIN
 #define PROGRAM_NAME        "gtfstool"
-#define PROGRAM_VERSION     "0.4"
+#define PROGRAM_VERSION     "0.5"
 #endif
 
 #define GTFS_SUCCESS        0
@@ -97,16 +98,19 @@ extern
 #endif
 struct agency_jp_t g_agency_jp;
 
+/*
 #ifndef _MAIN
 extern
 #endif
 struct gtfs_t* g_gtfs;
+*/
 
 #ifndef _MAIN
 extern
 #endif
 struct gtfs_hash_t* g_gtfs_hash;
 
+/*
 #ifndef _MAIN
 extern
 #endif
@@ -116,6 +120,7 @@ struct gtfs_label_t g_gtfs_label;
 extern
 #endif
 struct feed_info_t g_feed_info;
+*/
 
 #ifndef _MAIN
 extern
@@ -177,6 +182,7 @@ extern
 #endif
 const char* g_output_dir;
 
+/*
 #ifdef _MAIN
 const char* g_gtfs_filename[] = {
     "agency.txt",
@@ -225,6 +231,7 @@ const unsigned int g_gtfs_filemap[] = {
 #else
 extern const unsigned int g_gtfs_filemap[];
 #endif
+*/
 
 #ifndef _MAIN
 extern
@@ -266,6 +273,7 @@ extern
 #endif
 int g_is_free_bus;
 
+/*
 #ifndef _MAIN
 extern
 #endif
@@ -275,6 +283,7 @@ char* g_proxy_server;
 extern
 #endif
 unsigned int g_proxy_port;
+*/
 
 #ifndef _MAIN
 extern

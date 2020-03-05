@@ -24,6 +24,7 @@
  */
 #define _MAIN
 #include "gtfstool.h"
+#include "gtfs_var.h"
 
 static void version()
 {

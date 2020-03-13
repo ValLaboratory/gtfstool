@@ -1679,6 +1679,22 @@ static int gtfs_od_fare_check()
     return result;
 }
 
+// stop_id が未使用かチェックする
+static int is_stopid_unused(const char* stop_id)
+{
+    int count, i;
+    
+    count = vect_count(g_gtfs->stop_times_tbl);
+    for (i = 0; i < count; i++) {
+        struct stop_time_t* st;
+        
+        st = (struct stop_time_t*)vect_get(g_gtfs->stop_times_tbl, i);
+        if (strcmp(stop_id, st->stop_id) == 0)
+            return 0;   // used
+    }
+    return 1;   // unuse
+}
+
 static int gtfs_stop_name_yomi_check()
 {
     int result = 0;
@@ -1692,14 +1708,20 @@ static int gtfs_stop_name_yomi_check()
         stop = (struct stop_t*)vect_get(g_gtfs->stops_tbl, i);
         // 親子関係の場合は子のstop_nameはチェックしない。
         if (strlen(stop->stop_name) > 0 && strlen(stop->parent_station) == 0) {
-            struct translation_t* trans = hash_get(g_gtfs_hash->translations_htbl, stop->stop_name);
+            int notfound_flag = 0;
+            struct translation_t* trans;
+
+            trans = hash_get(g_gtfs_hash->translations_htbl, stop->stop_name);
             if (trans) {
                 if (strlen(trans->translation) < 1) {
-                    ret = gtfs_error("stops.txtの%d行目の[%s]の読み(ja-Hrkt)がtranslations.txtに存在していません。",
-                                     stop->lineno,
-                                     utf8_conv(stop->stop_name, (char*)alloca(256), 256));
+                    if (! is_stopid_unused(stop->stop_id))
+                        notfound_flag = 1;
                 }
             } else {
+                if (! is_stopid_unused(stop->stop_id))
+                    notfound_flag = 1;
+            }
+            if (notfound_flag) {
                 ret = gtfs_error("stops.txtの%d行目の[%s]の読み(ja-Hrkt)がtranslations.txtに存在していません。",
                                  stop->lineno,
                                  utf8_conv(stop->stop_name, (char*)alloca(256), 256));

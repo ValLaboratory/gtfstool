@@ -62,9 +62,9 @@ int gtfs_warning(const char* fmt, ...)
     return GTFS_WARNING;
 }
 
-int is_gtfs_file_exist(unsigned int file_kind)
+int is_gtfs_file_exist(struct gtfs_t* gtfs, unsigned int file_kind)
 {
-    return (g_gtfs->file_exist_bits & file_kind);
+    return (gtfs->file_exist_bits & file_kind);
 }
 
 char* utf8_conv(const char* str, char* enc_buf, int enc_bufsize)

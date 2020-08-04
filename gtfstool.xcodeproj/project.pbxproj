@@ -18,6 +18,7 @@
 		CE876D3B238293020000A0D0 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE876D3A238293020000A0D0 /* libcrypto.a */; };
 		CE9CBAF3217EDC1500785E30 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9CBAF2217EDC1500785E30 /* miniz.c */; };
 		CE9F2CD023C849BF00AA80E5 /* gtfs_route_branch.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9F2CCF23C849BF00AA80E5 /* gtfs_route_branch.c */; };
+		CEC96E8524581BA80046D701 /* gtfs_diff.c in Sources */ = {isa = PBXBuildFile; fileRef = CEC96E8424581BA80046D701 /* gtfs_diff.c */; };
 		CECD9C4E219AC6C60050ED31 /* merge_config.c in Sources */ = {isa = PBXBuildFile; fileRef = CECD9C4D219AC6C60050ED31 /* merge_config.c */; };
 		CECD9C51219C17E00050ED31 /* gtfs_merge.c in Sources */ = {isa = PBXBuildFile; fileRef = CECD9C50219C17E00050ED31 /* gtfs_merge.c */; };
 		CED14525221BBCF500F359F3 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = CED14503221BBCF300F359F3 /* hash.c */; };
@@ -91,6 +92,7 @@
 		CEAF9542223217380051D480 /* merge.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = merge.conf; sourceTree = "<group>"; };
 		CEAF9543223217380051D480 /* memo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = memo.txt; sourceTree = "<group>"; };
 		CEC66BB1240DF8F800DB3889 /* gtfs_var.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gtfs_var.h; sourceTree = "<group>"; };
+		CEC96E8424581BA80046D701 /* gtfs_diff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfs_diff.c; sourceTree = "<group>"; };
 		CECD9C4D219AC6C60050ED31 /* merge_config.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = merge_config.c; sourceTree = "<group>"; };
 		CECD9C50219C17E00050ED31 /* gtfs_merge.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gtfs_merge.c; sourceTree = "<group>"; };
 		CED14501221BBCF300F359F3 /* zlibutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zlibutil.h; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 				CE9F2CCF23C849BF00AA80E5 /* gtfs_route_branch.c */,
 				CE12A6A2221A6EF4009BF3E7 /* gtfs_io.h */,
 				CEC66BB1240DF8F800DB3889 /* gtfs_var.h */,
+				CEC96E8424581BA80046D701 /* gtfs_diff.c */,
 				CE55FB082179A99D00DF364B /* gtfs_reader.c */,
 				CE4E89A721928CF200D760CE /* gtfs_writer.c */,
 				CE55FADB21795A7000DF364B /* main.c */,
@@ -329,6 +332,7 @@
 				CED14530221BBCF500F359F3 /* mtfunc.c in Sources */,
 				CE55FB092179A99D00DF364B /* gtfs_reader.c in Sources */,
 				CED14534221BBCF500F359F3 /* memutil.c in Sources */,
+				CEC96E8524581BA80046D701 /* gtfs_diff.c in Sources */,
 				CE55FADC21795A7000DF364B /* main.c in Sources */,
 				CED1452C221BBCF500F359F3 /* datetime.c in Sources */,
 				CED14535221BBCF500F359F3 /* send.c in Sources */,

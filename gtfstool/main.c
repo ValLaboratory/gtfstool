@@ -41,6 +41,7 @@ static void usage()
     fprintf(stdout, "         [-s output_dir] 複数のagencyを分割します\n");
     fprintf(stdout, "         [-m merge.conf] 複数のGTFS-JPを一つにマージします\n");
     fprintf(stdout, "         [-b output_dir] 停車パターンが違うroute_idを複数に分割します\n");
+    fprintf(stdout, "         [-f output_dir] 2つのGTFS-JPの内容を比較して差分を抽出します\n");
     fprintf(stdout, "         [-v] プログラムバージョンを表示します\n");
     fprintf(stdout, "options: [-w] 整合性チェック時の警告を無視します\n");
     fprintf(stdout, "         [-i] チェック時にcalendar_dates.txtのservice_idがcalender.txtに\n"
@@ -94,21 +95,28 @@ struct gtfs_t* gtfs_alloc()
     return gtfs;
 }
 
+struct gtfs_hash_t* gtfs_hash_alloc()
+{
+    struct gtfs_hash_t* gtfs_hash;
+
+    gtfs_hash = calloc(1, sizeof(struct gtfs_hash_t));
+    gtfs_hash->agency_htbl = hash_initialize(17);
+    gtfs_hash->routes_htbl = hash_initialize(307);
+    gtfs_hash->stops_htbl = hash_initialize(1009);
+    gtfs_hash->trips_htbl = hash_initialize(1009);
+    gtfs_hash->calendar_htbl = hash_initialize(41);
+    gtfs_hash->calendar_dates_htbl = hash_initialize(211);
+    gtfs_hash->fare_attrs_htbl = hash_initialize(1009);
+    gtfs_hash->fare_rules_htbl = hash_initialize(999983);
+    gtfs_hash->translations_htbl = hash_initialize(1009);
+    gtfs_hash->routes_jp_htbl = hash_initialize(307);
+    return gtfs_hash;
+}
+
 static void init_gtfs()
 {
     g_gtfs = gtfs_alloc();
-
-    g_gtfs_hash = calloc(1, sizeof(struct gtfs_hash_t));
-    g_gtfs_hash->agency_htbl = hash_initialize(17);
-    g_gtfs_hash->routes_htbl = hash_initialize(307);
-    g_gtfs_hash->stops_htbl = hash_initialize(1009);
-    g_gtfs_hash->trips_htbl = hash_initialize(1009);
-    g_gtfs_hash->calendar_htbl = hash_initialize(41);
-    g_gtfs_hash->calendar_dates_htbl = hash_initialize(211);
-    g_gtfs_hash->fare_attrs_htbl = hash_initialize(1009);
-    g_gtfs_hash->fare_rules_htbl = hash_initialize(999983);
-    g_gtfs_hash->translations_htbl = hash_initialize(1009);
-    g_gtfs_hash->routes_jp_htbl = hash_initialize(307);
+    g_gtfs_hash = gtfs_hash_alloc();
 
     g_vehicle_timetable = hash_initialize(1009);
     g_route_trips_htbl = hash_initialize(1009);
@@ -229,6 +237,41 @@ void gtfs_free(struct gtfs_t* gtfs, int is_element_free)
     free(gtfs);
 }
 
+void gtfs_hash_free(struct gtfs_hash_t* gtfs_hash)
+{
+    if (gtfs_hash->agency_htbl)
+        hash_finalize(gtfs_hash->agency_htbl);
+
+    if (gtfs_hash->routes_htbl)
+        hash_finalize(gtfs_hash->routes_htbl);
+
+    if (gtfs_hash->stops_htbl)
+        hash_finalize(gtfs_hash->stops_htbl);
+
+    if (gtfs_hash->fare_rules_htbl)
+        hash_finalize(gtfs_hash->fare_rules_htbl);
+
+    if (gtfs_hash->fare_attrs_htbl)
+        hash_finalize(gtfs_hash->fare_attrs_htbl);
+
+    if (gtfs_hash->trips_htbl)
+        hash_finalize(gtfs_hash->trips_htbl);
+
+    if (gtfs_hash->calendar_htbl)
+        hash_finalize(gtfs_hash->calendar_htbl);
+
+    if (gtfs_hash->calendar_dates_htbl)
+        hash_finalize(gtfs_hash->calendar_dates_htbl);
+
+    if (gtfs_hash->translations_htbl)
+        hash_finalize(gtfs_hash->translations_htbl);
+
+    if (gtfs_hash->routes_jp_htbl)
+        hash_finalize(gtfs_hash->routes_jp_htbl);
+
+    free(gtfs_hash);
+}
+
 static void final_gtfs()
 {
     if (g_vehicle_timetable) {
@@ -240,39 +283,8 @@ static void final_gtfs()
         hash_finalize(g_route_trips_htbl);
     }
 
-    if (g_gtfs_hash) {
-        if (g_gtfs_hash->agency_htbl) {
-            hash_finalize(g_gtfs_hash->agency_htbl);
-        }
-        if (g_gtfs_hash->routes_htbl) {
-            hash_finalize(g_gtfs_hash->routes_htbl);
-        }
-        if (g_gtfs_hash->stops_htbl) {
-            hash_finalize(g_gtfs_hash->stops_htbl);
-        }
-        if (g_gtfs_hash->fare_rules_htbl) {
-            hash_finalize(g_gtfs_hash->fare_rules_htbl);
-        }
-        if (g_gtfs_hash->fare_attrs_htbl) {
-            hash_finalize(g_gtfs_hash->fare_attrs_htbl);
-        }
-        if (g_gtfs_hash->trips_htbl) {
-            hash_finalize(g_gtfs_hash->trips_htbl);
-        }
-        if (g_gtfs_hash->calendar_htbl) {
-            hash_finalize(g_gtfs_hash->calendar_htbl);
-        }
-        if (g_gtfs_hash->calendar_dates_htbl) {
-            hash_finalize(g_gtfs_hash->calendar_dates_htbl);
-        }
-        if (g_gtfs_hash->translations_htbl) {
-            hash_finalize(g_gtfs_hash->translations_htbl);
-        }
-        if (g_gtfs_hash->routes_jp_htbl) {
-            hash_finalize(g_gtfs_hash->routes_jp_htbl);
-        }
-        free(g_gtfs_hash);
-    }
+    if (g_gtfs_hash)
+        gtfs_hash_free(g_gtfs_hash);
 
     if (g_gtfs)
         gtfs_free(g_gtfs, 1);
@@ -342,6 +354,14 @@ static int args(int argc, const char * argv[])
                     usage();
                     return 1;
                 }
+            } else if (strcmp(argv[i], "-f") == 0) {
+                    if (i < argc-1) {
+                        g_output_dir = argv[++i];
+                        g_exec_mode = GTFS_DIFF_MODE;
+                    } else {
+                        usage();
+                        return 1;
+                    }
             } else if (strcmp(argv[i], "-v") == 0) {
                 g_exec_mode = GTFS_VERSION_MODE;
             } else {
@@ -478,7 +498,7 @@ static int is_skip_argument(const char* argv)
 {
     if (strcmp(argv, "-s") == 0 || strcmp(argv, "-m") == 0 ||
         strcmp(argv, "-e") == 0 || strcmp(argv, "-p") == 0 ||
-        strcmp(argv, "-b") == 0)
+        strcmp(argv, "-b") == 0 || strcmp(argv, "-f") == 0)
         return 1;
     return 0;
 }
@@ -558,6 +578,33 @@ static void check_split_mode(int argc, const char* argv[])
     }
 }
 
+static void diff_mode(int argc, const char* argv[])
+{
+    int i;
+    const char* diff_zip;
+    
+    TRACE("%s\n", "*GTFS DIFF START*");
+    g_start_time = system_time();
+
+    for (i = 1; i < argc; i++) {
+        if (*argv[i] == '-') {
+            if (is_skip_argument(argv[i]))
+                i++;    // skip argument
+            continue;
+        }
+        
+        init_gtfs();
+        strcpy(g_gtfs_zip, argv[i]);
+        i++;
+        if (i < argc)
+            diff_zip = argv[i];
+
+        if (gtfs_diff(diff_zip) == 0)
+            ;
+        final_gtfs();
+    }
+}
+
 int main(int argc, const char * argv[])
 {
     args(argc, argv);
@@ -573,8 +620,10 @@ int main(int argc, const char * argv[])
         route_branch_mode(argc, argv);
     } else if (g_exec_mode == GTFS_VERSION_MODE) {
         version();
-    } else {
+    } else if (g_exec_mode == GTFS_CHECK_MODE || g_exec_mode == GTFS_SPLIT_MODE) {
         check_split_mode(argc, argv);
+    } else if (g_exec_mode == GTFS_DIFF_MODE) {
+        diff_mode(argc, argv);
     }
     cleanup();
 

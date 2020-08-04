@@ -38,7 +38,7 @@
 
 #ifdef _MAIN
 #define PROGRAM_NAME        "gtfstool"
-#define PROGRAM_VERSION     "0.5"
+#define PROGRAM_VERSION     "0.7"
 #endif
 
 #define GTFS_SUCCESS        0
@@ -51,6 +51,7 @@
 #define GTFS_MERGE_MODE         3
 #define GTFS_DUMP_MODE          4
 #define GTFS_ROUTE_BRANCH_MODE  5
+#define GTFS_DIFF_MODE          6
 #define GTFS_VERSION_MODE       9
 
 struct merge_gtfs_prefix_t {
@@ -298,7 +299,8 @@ extern "C" {
 // main.c
 struct gtfs_t* gtfs_alloc(void);
 void gtfs_free(struct gtfs_t* gtfs, int is_element_free);
-int is_gtfs_file_exist(unsigned int file_kind);
+struct gtfs_hash_t* gtfs_hash_alloc(void);
+void gtfs_hash_free(struct gtfs_hash_t* gtfs_hash);
 
 // merge_config.c
 int merge_config(const char* conf_fname);
@@ -307,7 +309,7 @@ int merge_config(const char* conf_fname);
 int gtfs_fatal_error(const char* fmt, ...);
 int gtfs_error(const char* fmt, ...);
 int gtfs_warning(const char* fmt, ...);
-int is_gtfs_file_exist(unsigned int file_kind);
+int is_gtfs_file_exist(struct gtfs_t* gtfs, unsigned int file_kind);
 char* utf8_conv(const char* str, char* enc_buf, int enc_bufsize);
 
 // gtfs_check.c
@@ -315,6 +317,7 @@ char* fare_rule_key(const char* route_id, const char* origin_id, const char* des
 int gtfs_hash_table_key_check(void);
 int gtfs_vehicle_timetable(void);
 int gtfs_route_trips(void);
+int gtfs_trips_base_index(struct vector_t* trips_tbl);
 int gtfs_check(void);
 
 // gtfs_split.c
@@ -328,6 +331,9 @@ int gtfs_dump(void);
 
 // gtfs_route_branch.c
 int gtfs_route_branch(void);
+
+// gtfs_diff.c
+int gtfs_diff(const char* diff_zip);
 
 #ifdef __cplusplus
 }

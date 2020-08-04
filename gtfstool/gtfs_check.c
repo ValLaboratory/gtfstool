@@ -56,53 +56,53 @@ static int gtfs_is_free_bus()
     return is_free;
 }
 
-static int gtfs_file_exist_check()
+static int gtfs_file_exist_check(struct gtfs_t* gtfs)
 {
     int result = 0;
 
-    if (! (is_gtfs_file_exist(GTFS_FILE_AGENCY))) {
+    if (! (is_gtfs_file_exist(gtfs, GTFS_FILE_AGENCY))) {
         int ret = gtfs_error("agency.txtが存在していません。agency.txtは必須ファイルです。");
         if (ret < result)
             result = ret;
     }
-    if (! (is_gtfs_file_exist(GTFS_FILE_STOPS))) {
+    if (! (is_gtfs_file_exist(gtfs, GTFS_FILE_STOPS))) {
         int ret = gtfs_error("stops.txtが存在していません。stops.txtは必須ファイルです。");
         if (ret < result)
             result = ret;
     }
-    if (! (is_gtfs_file_exist(GTFS_FILE_ROUTES))) {
+    if (! (is_gtfs_file_exist(gtfs, GTFS_FILE_ROUTES))) {
         int ret = gtfs_error("routes.txtが存在していません。routes.txtは必須ファイルです。");
         if (ret < result)
             result = ret;
     }
-    if (! (is_gtfs_file_exist(GTFS_FILE_TRIPS))) {
+    if (! (is_gtfs_file_exist(gtfs, GTFS_FILE_TRIPS))) {
         int ret = gtfs_error("trips.txtが存在していません。trips.txtは必須ファイルです。");
         if (ret < result)
             result = ret;
     }
-    if (! (is_gtfs_file_exist(GTFS_FILE_STOP_TIMES))) {
+    if (! (is_gtfs_file_exist(gtfs, GTFS_FILE_STOP_TIMES))) {
         int ret = gtfs_error("stop_times.txtが存在していません。stop_times.txtは必須ファイルです。");
         if (ret < result)
             result = ret;
     }
-    if (! (is_gtfs_file_exist(GTFS_FILE_CALENDAR))) {
+    if (! (is_gtfs_file_exist(gtfs, GTFS_FILE_CALENDAR))) {
         int ret = gtfs_error("calendar.txtが存在していません。calendar.txtは必須ファイルです。");
         if (ret < result)
             result = ret;
     }
-    if (! (is_gtfs_file_exist(GTFS_FILE_FEED_INFO))) {
+    if (! (is_gtfs_file_exist(gtfs, GTFS_FILE_FEED_INFO))) {
         int ret = gtfs_error("feed_info.txtが存在していません。feed_info.txtは必須ファイルです。");
         if (ret < result)
             result = ret;
     }
-    if (! (is_gtfs_file_exist(GTFS_FILE_FARE_ATTRIBUTES))) {
+    if (! (is_gtfs_file_exist(gtfs, GTFS_FILE_FARE_ATTRIBUTES))) {
         if (! g_is_free_bus) {
             int ret = gtfs_error("fare_attributes.txtが存在していません。有料の場合は必須となります。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (! (is_gtfs_file_exist(GTFS_FILE_FARE_RULES))) {
+    if (! (is_gtfs_file_exist(gtfs, GTFS_FILE_FARE_RULES))) {
         if (! g_is_free_bus) {
             // fare_attributes.txtが1行の場合は均一運賃としてfare_rules.txtは省略可能とします。
             if (vect_count(g_gtfs->fare_attrs_tbl) != 1) {
@@ -112,7 +112,7 @@ static int gtfs_file_exist_check()
             }
         }
     }
-    if (! (is_gtfs_file_exist(GTFS_FILE_TRANSLATIONS))) {
+    if (! (is_gtfs_file_exist(gtfs, GTFS_FILE_TRANSLATIONS))) {
         int ret = gtfs_error("translations.txtが存在していません。「駅すぱあと」では停留所・標柱名称の「よみがな」が必要となります。");
         if (ret < result)
             result = ret;
@@ -134,84 +134,84 @@ static int gtfs_file_label_check()
 {
     int result = 0;
 
-    if (is_gtfs_file_exist(GTFS_FILE_AGENCY)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_AGENCY)) {
         if (! is_gtfs_file_label(g_gtfs_label.agency, "agency_id")) {
             int ret = gtfs_error("agency.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (is_gtfs_file_exist(GTFS_FILE_STOPS)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_STOPS)) {
         if (! is_gtfs_file_label(g_gtfs_label.stops, "stop_id")) {
             int ret = gtfs_error("stops.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (is_gtfs_file_exist(GTFS_FILE_ROUTES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_ROUTES)) {
         if (! is_gtfs_file_label(g_gtfs_label.routes, "route_id")) {
             int ret = gtfs_error("routes.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (is_gtfs_file_exist(GTFS_FILE_TRIPS)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_TRIPS)) {
         if (! is_gtfs_file_label(g_gtfs_label.routes, "route_id")) {
             int ret = gtfs_error("trips.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (is_gtfs_file_exist(GTFS_FILE_STOP_TIMES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_STOP_TIMES)) {
         if (! is_gtfs_file_label(g_gtfs_label.stop_times, "trip_id")) {
             int ret = gtfs_error("stop_times.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (is_gtfs_file_exist(GTFS_FILE_CALENDAR)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_CALENDAR)) {
         if (! is_gtfs_file_label(g_gtfs_label.calendar, "service_id")) {
             int ret = gtfs_error("calendar.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (is_gtfs_file_exist(GTFS_FILE_CALENDAR_DATES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_CALENDAR_DATES)) {
         if (! is_gtfs_file_label(g_gtfs_label.calendar_dates, "service_id")) {
             int ret = gtfs_error("calendar_dates.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (is_gtfs_file_exist(GTFS_FILE_FEED_INFO)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_FEED_INFO)) {
         if (! is_gtfs_file_label(g_gtfs_label.feed_info, "feed_publisher_name")) {
             int ret = gtfs_error("feed_info.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (is_gtfs_file_exist(GTFS_FILE_FARE_ATTRIBUTES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_FARE_ATTRIBUTES)) {
         if (! is_gtfs_file_label(g_gtfs_label.fare_attributes, "fare_id")) {
             int ret = gtfs_error("fare_attributes.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (is_gtfs_file_exist(GTFS_FILE_FARE_RULES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_FARE_RULES)) {
         if (! is_gtfs_file_label(g_gtfs_label.fare_rules, "fare_id")) {
             int ret = gtfs_error("fare_rules.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (is_gtfs_file_exist(GTFS_FILE_TRANSLATIONS)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_TRANSLATIONS)) {
         if (! is_gtfs_file_label(g_gtfs_label.translations, "trans_id")) {
             int ret = gtfs_error("translations.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;
         }
     }
-    if (is_gtfs_file_exist(GTFS_FILE_ROUTES_JP)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_ROUTES_JP)) {
         if (! is_gtfs_file_label(g_gtfs_label.routes_jp, "route_id")) {
             int ret = gtfs_error("routes_jp.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
@@ -575,7 +575,7 @@ int gtfs_hash_table_key_check()
     if (ret < result)
         result = ret;
 
-    if (is_gtfs_file_exist(GTFS_FILE_ROUTES_JP)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_ROUTES_JP)) {
         ret = gtfs_hash_routes_jp_table();
         if (ret < result)
             result = ret;
@@ -1129,57 +1129,57 @@ static int gtfs_column_exist_check()
 {
     int result = 0;
 
-    if (is_gtfs_file_exist(GTFS_FILE_AGENCY)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_AGENCY)) {
         int ret = agency_column_check();
         if (ret < result)
             result = ret;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_STOPS)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_STOPS)) {
         int ret = stops_column_check();
         if (ret < result)
             result = ret;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_ROUTES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_ROUTES)) {
         int ret = routes_column_check();
         if (ret < result)
             result = ret;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_TRIPS)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_TRIPS)) {
         int ret = trips_column_check();
         if (ret < result)
             result = ret;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_STOP_TIMES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_STOP_TIMES)) {
         int ret = stop_times_column_check();
         if (ret < result)
             result = ret;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_CALENDAR)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_CALENDAR)) {
         int ret = calendar_column_check();
         if (ret < result)
             result = ret;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_CALENDAR_DATES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_CALENDAR_DATES)) {
         int ret = calendar_dates_column_check();
         if (ret < result)
             result = ret;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_FARE_ATTRIBUTES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_FARE_ATTRIBUTES)) {
         int ret = fare_attributes_column_check();
         if (ret < result)
             result = ret;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_FARE_RULES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_FARE_RULES)) {
         int ret = fare_rules_column_check();
         if (ret < result)
             result = ret;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_FEED_INFO)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_FEED_INFO)) {
         int ret = feed_info_column_check();
         if (ret < result)
             result = ret;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_TRANSLATIONS)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_TRANSLATIONS)) {
         int ret = translations_column_check();
         if (ret < result)
             result = ret;
@@ -1353,6 +1353,53 @@ static int gtfs_trips_time_check()
     return result;
 }
 
+// tripsの中で停車数が同じである基準となるtripのインデックスを求めます。
+int gtfs_trips_base_index(struct vector_t* trips_tbl)
+{
+    int count, i;
+    int* stops_count_array = NULL;
+    int* same_stops_array = NULL;
+    int base_stops_count = 0;
+    int base_index = -1;
+
+    count = vect_count(trips_tbl);
+    if (count == 0)
+        return -1;
+
+    // 停車数の配列
+    stops_count_array = calloc(count, sizeof(int));
+    same_stops_array = calloc(count, sizeof(int));
+
+    // 停車数のチェック
+    for (i = 0; i < count; i++) {
+        struct trip_t* trip;
+        struct vector_t* stop_time_tbl;
+        int stop_count;
+
+        trip = (struct trip_t*)vect_get(trips_tbl, i);
+        stop_time_tbl = (struct vector_t*)hash_get(g_vehicle_timetable, trip->trip_id);
+        stop_count = vect_count(stop_time_tbl);
+        stops_count_array[i] = stop_count;
+    }
+    for (i = 0; i < count; i++) {
+        int j;
+
+        for (j = 0; j < count; j++) {
+            if (stops_count_array[i] == stops_count_array[j])
+                same_stops_array[i] = same_stops_array[i] + 1;
+        }
+    }
+    for (i = 0; i < count; i++) {
+        if (same_stops_array[i] > base_stops_count) {
+            base_stops_count = same_stops_array[i];
+            base_index = i;
+        }
+    }
+    free(stops_count_array);
+    free(same_stops_array);
+    return base_index;
+}
+
 static int gtfs_route_stop_pattern_check()
 {
     int result = 0;
@@ -1363,12 +1410,15 @@ static int gtfs_route_stop_pattern_check()
     while (*keys) {
         char* route_id;
         struct vector_t* trips_tbl;
-        int count, i;
-        int first_stop_count = 0;
-        struct vector_t* first_stop_time_tbl = NULL;
+        int count, i, j;
+        struct vector_t* base_stop_time_tbl = NULL;
+        int base_stops_count = 0;
+        int base_index = -1;
 
         route_id = *keys;
         trips_tbl = (struct vector_t*)hash_get(g_route_trips_htbl, route_id);
+
+        base_index = gtfs_trips_base_index(trips_tbl);
 
         count = vect_count(trips_tbl);
         if (count == 0) {
@@ -1379,21 +1429,22 @@ static int gtfs_route_stop_pattern_check()
             if (ret < result)
                 result = ret;
         }
+        if (base_index >= 0) {
+            struct trip_t* trip;
+
+            trip = (struct trip_t*)vect_get(trips_tbl, base_index);
+            base_stop_time_tbl = (struct vector_t*)hash_get(g_vehicle_timetable, trip->trip_id);
+            base_stops_count = vect_count(base_stop_time_tbl);
+        }
         for (i = 0; i < count; i++) {
             struct trip_t* trip;
-            struct vector_t* stop_time_tbl;
-            int stop_count, j;
+            struct vector_t* stop_time_tbl = NULL;
+            int stops_count = 0;
 
             trip = (struct trip_t*)vect_get(trips_tbl, i);
             stop_time_tbl = (struct vector_t*)hash_get(g_vehicle_timetable, trip->trip_id);
-            stop_count = vect_count(stop_time_tbl);
-
-            if (i == 0) {
-                first_stop_count = stop_count;
-                first_stop_time_tbl = stop_time_tbl;
-                continue;
-            }
-            if (first_stop_count != stop_count) {
+            stops_count = vect_count(stop_time_tbl);
+            if (base_stops_count != stops_count) {
                 if (! g_route_stop_pattern_valid) {
                     int ret = gtfs_error("route_id(%s):trip(%s)の停車数が違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
                                          utf8_conv(route_id, (char*)alloca(256), 256),
@@ -1401,16 +1452,27 @@ static int gtfs_route_stop_pattern_check()
                     if (ret < result)
                         result = ret;
                 }
-                break;
             }
+        }
+        if (result == GTFS_FATAL_ERROR)
+            break;
+
+        for (i = 0; i < count; i++) {
+            struct trip_t* trip;
+            struct vector_t* stop_time_tbl;
+            int stop_count;
+
+            trip = (struct trip_t*)vect_get(trips_tbl, i);
+            stop_time_tbl = (struct vector_t*)hash_get(g_vehicle_timetable, trip->trip_id);
+            stop_count = vect_count(stop_time_tbl);
             for (j = 0; j < stop_count; j++) {
-                struct stop_time_t* fst = (struct stop_time_t*)vect_get(first_stop_time_tbl, j);
+                struct stop_time_t* bst = (struct stop_time_t*)vect_get(base_stop_time_tbl, j);
                 struct stop_time_t* st = (struct stop_time_t*)vect_get(stop_time_tbl, j);
-                if (strcmp(fst->stop_id, st->stop_id) != 0) {
+                if (strcmp(bst->stop_id, st->stop_id) != 0) {
                     if (! g_route_stop_pattern_valid) {
-                        int ret = gtfs_error("route_id(%s):(first_trip(%s):trip(%s))の停車パターンが違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
+                        int ret = gtfs_error("route_id(%s):(trip(%s)とtrip(%s))の停車パターンが違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
                                              utf8_conv(route_id, (char*)alloca(256), 256),
-                                             utf8_conv(fst->trip_id, (char*)alloca(256), 256),
+                                             utf8_conv(bst->trip_id, (char*)alloca(256), 256),
                                              utf8_conv(st->trip_id, (char*)alloca(256), 256));
                         if (ret < result)
                             result = ret;
@@ -1781,7 +1843,7 @@ static int gtfs_stop_name_duplicate_check()
 
 static int gtfs_route_destination_check(const char* r1_id, const char* r2_id)
 {
-    if (is_gtfs_file_exist(GTFS_FILE_ROUTES_JP)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_ROUTES_JP)) {
         struct route_jp_t* rjp1;
         struct route_jp_t* rjp2;
 
@@ -1822,7 +1884,7 @@ static int gtfs_route_name_duplicate_check()
 
             hroute = hash_get(route_name_htbl, name);
             if (hroute) {
-                if (is_gtfs_file_exist(GTFS_FILE_ROUTES_JP)) {
+                if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_ROUTES_JP)) {
                     struct route_jp_t* rjp1;
                     struct route_jp_t* rjp2;
 
@@ -1973,7 +2035,7 @@ static int gtfs_trips_stop_id_duplicate_check()
 int gtfs_check()
 {
     TRACE("%s\n", "*GTFS(zip)の読み込み*");
-    if (gtfs_zip_archive_reader(g_gtfs_zip) < 0) {
+    if (gtfs_zip_archive_reader(g_gtfs_zip, g_gtfs) < 0) {
         err_write("gtfs_check: zip_archive_reader error (%s).\n",
                   utf8_conv(g_gtfs_zip, (char*)alloca(256), 256));
         return -1;
@@ -1983,7 +2045,7 @@ int gtfs_check()
     g_is_free_bus = gtfs_is_free_bus();
 
     TRACE("%s\n", "*必須ファイルの存在チェック*");
-    if (gtfs_file_exist_check() == GTFS_FATAL_ERROR)
+    if (gtfs_file_exist_check(g_gtfs) == GTFS_FATAL_ERROR)
         return -1;
 
     TRACE("%s\n", "*ファイルの先頭行のラベルをチェック*");
@@ -2012,14 +2074,14 @@ int gtfs_check()
     if (gtfs_route_stop_pattern_check() == GTFS_FATAL_ERROR)
         return -1;
 
-    if (is_gtfs_file_exist(GTFS_FILE_FARE_RULES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_FARE_RULES)) {
         // 運賃関係のチェック
         TRACE("%s\n", "*通過時刻表の区間運賃がfare_rules.txtに登録されているかチェック*");
         if (gtfs_od_fare_check() == GTFS_FATAL_ERROR)
             return -1;
     }
 
-    if (is_gtfs_file_exist(GTFS_FILE_TRANSLATIONS)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_TRANSLATIONS)) {
         TRACE("%s\n", "*stops.txtの読みがtranslations.txtに存在するかチェック*");
         if (gtfs_stop_name_yomi_check() == GTFS_FATAL_ERROR)
             return -1;

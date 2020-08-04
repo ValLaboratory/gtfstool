@@ -402,7 +402,7 @@ int gtfs_split()
     int count, i;
 
     TRACE("%s\n", "*GTFS(zip)の読み込み*");
-    if (gtfs_zip_archive_reader(g_gtfs_zip) < 0) {
+    if (gtfs_zip_archive_reader(g_gtfs_zip, g_gtfs) < 0) {
         err_write("gtfs_check: zip_archive_reader error (%s).\n", g_gtfs_zip);
         return -1;
     }

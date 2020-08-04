@@ -57,7 +57,7 @@ static int find_label_index(char** label_list, const char* target_label)
     return -1;
 }
 
-static void gtfs_agency_reader(const char* csvptr, size_t size)
+static void gtfs_agency_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -128,7 +128,7 @@ static void gtfs_agency_reader(const char* csvptr, size_t size)
                         strncpy(agency->agency_email, p, sizeof(agency->agency_email));
                     }
                     agency->lineno = lineno;
-                    vect_append(g_gtfs->agency_tbl, agency);
+                    vect_append(gtfs->agency_tbl, agency);
                 }
                 list_free(list);
             }
@@ -138,7 +138,7 @@ static void gtfs_agency_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_agency_jp_reader(const char* csvptr, size_t size)
+static void gtfs_agency_jp_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -199,7 +199,7 @@ static void gtfs_agency_jp_reader(const char* csvptr, size_t size)
                         strncpy(agency_jp->agency_president_name, p, sizeof(agency_jp->agency_president_name));
                     }
                     agency_jp->lineno = lineno;
-                    vect_append(g_gtfs->agency_jp_tbl, agency_jp);
+                    vect_append(gtfs->agency_jp_tbl, agency_jp);
                 }
                 list_free(list);
             }
@@ -209,7 +209,7 @@ static void gtfs_agency_jp_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_stops_reader(const char* csvptr, size_t size)
+static void gtfs_stops_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -302,7 +302,7 @@ static void gtfs_stops_reader(const char* csvptr, size_t size)
                         strncpy(stop->wheelchair_boarding, p, sizeof(stop->wheelchair_boarding));
                     }
                     stop->lineno = lineno;
-                    vect_append(g_gtfs->stops_tbl, stop);
+                    vect_append(gtfs->stops_tbl, stop);
                 }
                 list_free(list);
             }
@@ -312,7 +312,7 @@ static void gtfs_stops_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_routes_reader(const char* csvptr, size_t size)
+static void gtfs_routes_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -397,7 +397,7 @@ static void gtfs_routes_reader(const char* csvptr, size_t size)
                         strncpy(route->jp_parent_route_id, p, sizeof(route->jp_parent_route_id));
                     }
                     route->lineno = lineno;
-                    vect_append(g_gtfs->routes_tbl, route);
+                    vect_append(gtfs->routes_tbl, route);
                 }
                 list_free(list);
             }
@@ -407,7 +407,7 @@ static void gtfs_routes_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_routes_jp_reader(const char* csvptr, size_t size)
+static void gtfs_routes_jp_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -463,7 +463,7 @@ static void gtfs_routes_jp_reader(const char* csvptr, size_t size)
                         strncpy(routejp->destination_stop, p, sizeof(routejp->destination_stop));
                     }
                     routejp->lineno = lineno;
-                    vect_append(g_gtfs->routes_jp_tbl, routejp);
+                    vect_append(gtfs->routes_jp_tbl, routejp);
                 }
                 list_free(list);
             }
@@ -473,7 +473,7 @@ static void gtfs_routes_jp_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_trips_reader(const char* csvptr, size_t size)
+static void gtfs_trips_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -571,7 +571,7 @@ static void gtfs_trips_reader(const char* csvptr, size_t size)
                         strncpy(trip->jp_office_id, p, sizeof(trip->jp_office_id));
                     }
                     trip->lineno = lineno;
-                    vect_append(g_gtfs->trips_tbl, trip);
+                    vect_append(gtfs->trips_tbl, trip);
                 }
                 list_free(list);
             }
@@ -581,7 +581,7 @@ static void gtfs_trips_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_office_jp_reader(const char* csvptr, size_t size)
+static void gtfs_office_jp_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -631,7 +631,7 @@ static void gtfs_office_jp_reader(const char* csvptr, size_t size)
                         strncpy(officejp->office_phone, p, sizeof(officejp->office_phone));
                     }
                     officejp->lineno = lineno;
-                    vect_append(g_gtfs->office_jp_tbl, officejp);
+                    vect_append(gtfs->office_jp_tbl, officejp);
                 }
                 list_free(list);
             }
@@ -641,7 +641,7 @@ static void gtfs_office_jp_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_stop_times_reader(const char* csvptr, size_t size)
+static void gtfs_stop_times_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -724,7 +724,7 @@ static void gtfs_stop_times_reader(const char* csvptr, size_t size)
                         strncpy(st->timepoint, p, sizeof(st->timepoint));
                     }
                     st->lineno = lineno;
-                    vect_append(g_gtfs->stop_times_tbl, st);
+                    vect_append(gtfs->stop_times_tbl, st);
                 }
                 list_free(list);
             }
@@ -734,7 +734,7 @@ static void gtfs_stop_times_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_calendar_reader(const char* csvptr, size_t size)
+static void gtfs_calendar_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -816,7 +816,7 @@ static void gtfs_calendar_reader(const char* csvptr, size_t size)
                         strncpy(cal->end_date, p, sizeof(cal->end_date));
                     }
                     cal->lineno = lineno;
-                    vect_append(g_gtfs->calendar_tbl, cal);
+                    vect_append(gtfs->calendar_tbl, cal);
                 }
                 list_free(list);
             }
@@ -826,7 +826,7 @@ static void gtfs_calendar_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_calendar_dates_reader(const char* csvptr, size_t size)
+static void gtfs_calendar_dates_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -871,7 +871,7 @@ static void gtfs_calendar_dates_reader(const char* csvptr, size_t size)
                         strncpy(cald->exception_type, p, sizeof(cald->exception_type));
                     }
                     cald->lineno = lineno;
-                    vect_append(g_gtfs->calendar_dates_tbl, cald);
+                    vect_append(gtfs->calendar_dates_tbl, cald);
                 }
                 list_free(list);
             }
@@ -881,7 +881,7 @@ static void gtfs_calendar_dates_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_fare_attributes_reader(const char* csvptr, size_t size)
+static void gtfs_fare_attributes_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -947,7 +947,7 @@ static void gtfs_fare_attributes_reader(const char* csvptr, size_t size)
                         strncpy(fattr->transfer_duration, p, sizeof(fattr->transfer_duration));
                     }
                     fattr->lineno = lineno;
-                    vect_append(g_gtfs->fare_attrs_tbl, fattr);
+                    vect_append(gtfs->fare_attrs_tbl, fattr);
                 }
                 list_free(list);
             }
@@ -957,7 +957,7 @@ static void gtfs_fare_attributes_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_fare_rules_reader(const char* csvptr, size_t size)
+static void gtfs_fare_rules_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -1012,7 +1012,7 @@ static void gtfs_fare_rules_reader(const char* csvptr, size_t size)
                         strncpy(fare->contains_id, p, sizeof(fare->contains_id));
                     }
                     fare->lineno = lineno;
-                    vect_append(g_gtfs->fare_rules_tbl, fare);
+                    vect_append(gtfs->fare_rules_tbl, fare);
                 }
                 list_free(list);
             }
@@ -1022,7 +1022,7 @@ static void gtfs_fare_rules_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_shapes_reader(const char* csvptr, size_t size)
+static void gtfs_shapes_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -1078,7 +1078,7 @@ static void gtfs_shapes_reader(const char* csvptr, size_t size)
                         strncpy(shape->shape_dist_traveled, p, sizeof(shape->shape_dist_traveled));
                     }
                     shape->lineno = lineno;
-                    vect_append(g_gtfs->shapes_tbl, shape);
+                    vect_append(gtfs->shapes_tbl, shape);
                 }
                 list_free(list);
             }
@@ -1088,7 +1088,7 @@ static void gtfs_shapes_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_frequencies_reader(const char* csvptr, size_t size)
+static void gtfs_frequencies_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -1143,7 +1143,7 @@ static void gtfs_frequencies_reader(const char* csvptr, size_t size)
                         strncpy(freq->exact_times, p, sizeof(freq->exact_times));
                     }
                     freq->lineno = lineno;
-                    vect_append(g_gtfs->frequencies_tbl, freq);
+                    vect_append(gtfs->frequencies_tbl, freq);
                 }
                 list_free(list);
             }
@@ -1153,7 +1153,7 @@ static void gtfs_frequencies_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_transfers_reader(const char* csvptr, size_t size)
+static void gtfs_transfers_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -1204,7 +1204,7 @@ static void gtfs_transfers_reader(const char* csvptr, size_t size)
                         strncpy(transfer->min_transfer_time, p, sizeof(transfer->min_transfer_time));
                     }
                     transfer->lineno = lineno;
-                    vect_append(g_gtfs->transfers_tbl, transfer);
+                    vect_append(gtfs->transfers_tbl, transfer);
                 }
                 list_free(list);
             }
@@ -1214,7 +1214,7 @@ static void gtfs_transfers_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_feed_info_reader(const char* csvptr, size_t size)
+static void gtfs_feed_info_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -1277,7 +1277,7 @@ static void gtfs_feed_info_reader(const char* csvptr, size_t size)
     free(ptr);
 }
 
-static void gtfs_translations_reader(const char* csvptr, size_t size)
+static void gtfs_translations_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
@@ -1321,7 +1321,7 @@ static void gtfs_translations_reader(const char* csvptr, size_t size)
                         strncpy(trans->translation, p, sizeof(trans->translation));
                     }
                     trans->lineno = lineno;
-                    vect_append(g_gtfs->translations_tbl, trans);
+                    vect_append(gtfs->translations_tbl, trans);
                 }
                 list_free(list);
             }
@@ -1380,7 +1380,7 @@ static int utf8_bom(char* str)
     return 0;
 }
 
-int gtfs_zip_archive_reader(const char* zippath)
+int gtfs_zip_archive_reader(const char* zippath, struct gtfs_t* gtfs)
 {
     static mz_zip_archive zip_archive;
     mz_bool done = 0;
@@ -1417,137 +1417,137 @@ int gtfs_zip_archive_reader(const char* zippath)
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[AGENCY], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_agency_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_agency_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_AGENCY;
+        gtfs->file_exist_bits |= GTFS_FILE_AGENCY;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[AGENCY_JP], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_agency_jp_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_agency_jp_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_AGENCY_JP;
+        gtfs->file_exist_bits |= GTFS_FILE_AGENCY_JP;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[STOPS], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_stops_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_stops_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_STOPS;
+        gtfs->file_exist_bits |= GTFS_FILE_STOPS;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[ROUTES], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_routes_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_routes_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_ROUTES;
+        gtfs->file_exist_bits |= GTFS_FILE_ROUTES;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[ROUTES_JP], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_routes_jp_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_routes_jp_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_ROUTES_JP;
+        gtfs->file_exist_bits |= GTFS_FILE_ROUTES_JP;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[TRIPS], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_trips_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_trips_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_TRIPS;
+        gtfs->file_exist_bits |= GTFS_FILE_TRIPS;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[OFFICE_JP], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_office_jp_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_office_jp_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_OFFICE_JP;
+        gtfs->file_exist_bits |= GTFS_FILE_OFFICE_JP;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[STOP_TIMES], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_stop_times_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_stop_times_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_STOP_TIMES;
+        gtfs->file_exist_bits |= GTFS_FILE_STOP_TIMES;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[CALENDAR], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_calendar_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_calendar_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_CALENDAR;
+        gtfs->file_exist_bits |= GTFS_FILE_CALENDAR;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[CALENDAR_DATES], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_calendar_dates_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_calendar_dates_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_CALENDAR_DATES;
+        gtfs->file_exist_bits |= GTFS_FILE_CALENDAR_DATES;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[FARE_ATTRIBUTES], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_fare_attributes_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_fare_attributes_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_FARE_ATTRIBUTES;
+        gtfs->file_exist_bits |= GTFS_FILE_FARE_ATTRIBUTES;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[FARE_RULES], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_fare_rules_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_fare_rules_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_FARE_RULES;
+        gtfs->file_exist_bits |= GTFS_FILE_FARE_RULES;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[SHAPES], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_shapes_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_shapes_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_SHAPES;
+        gtfs->file_exist_bits |= GTFS_FILE_SHAPES;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[FREQUENCIES], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_frequencies_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_frequencies_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_FREQUENCIES;
+        gtfs->file_exist_bits |= GTFS_FILE_FREQUENCIES;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[TRANSFERS], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_transfers_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_transfers_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_TRANSFERS;
+        gtfs->file_exist_bits |= GTFS_FILE_TRANSFERS;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[TRANSLATIONS], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_translations_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_translations_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_TRANSLATIONS;
+        gtfs->file_exist_bits |= GTFS_FILE_TRANSLATIONS;
     }
 
     csvptr = mz_zip_reader_extract_file_to_heap(&zip_archive, g_gtfs_filename[FEED_INFO], &csvsize, 0);
     if (csvptr) {
         int bomsize = utf8_bom(csvptr);
-        gtfs_feed_info_reader(csvptr+bomsize, csvsize-bomsize);
+        gtfs_feed_info_reader(csvptr+bomsize, csvsize-bomsize, gtfs);
         mz_free(csvptr);
-        g_gtfs->file_exist_bits |= GTFS_FILE_FEED_INFO;
+        gtfs->file_exist_bits |= GTFS_FILE_FEED_INFO;
     }
 
     done = mz_zip_reader_end(&zip_archive);

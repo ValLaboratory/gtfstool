@@ -32,8 +32,6 @@
 #define MINIZ_HEADER_FILE_ONLY
 #include "miniz.c"
 
-#define CRLF    "\r\n"
-
 static int is_necessary_quote(const char* str)
 {
     int index;
@@ -42,7 +40,7 @@ static int is_necessary_quote(const char* str)
     return (index < 0)? 0 : 1;
 }
 
-static char* add_quote(char* qstr, const char* str)
+char* add_quote(char* qstr, const char* str)
 {
     *qstr = '\0';
     if (is_necessary_quote(str)) {
@@ -57,6 +55,14 @@ static char* add_quote(char* qstr, const char* str)
     return qstr;
 }
 
+void gtfs_agency_label_writer()
+{
+    csv_write("%s%s",
+              "agency_id,agency_name,agency_url,agency_timezone,agency_lang,"
+              "agency_phone,agency_fare_url,agency_email",
+              CRLF);
+}
+
 static void gtfs_agency_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -68,10 +74,7 @@ static void gtfs_agency_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[AGENCY]);
 
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "agency_id,agency_name,agency_url,agency_timezone,agency_lang,"
-              "agency_phone,agency_fare_url,agency_email",
-              CRLF);
+    gtfs_agency_label_writer();
 
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -90,6 +93,14 @@ static void gtfs_agency_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_agency_jp_label_writer()
+{
+    csv_write("%s%s",
+              "agency_id,agency_official_name,agency_zip_number,agency_address,"
+              "agency_president_pos,agency_president_name",
+              CRLF);
+}
+
 static void gtfs_agency_jp_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -106,10 +117,7 @@ static void gtfs_agency_jp_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[AGENCY_JP]);
 
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "agency_id,agency_official_name,agency_zip_number,agency_address,"
-              "agency_president_pos,agency_president_name",
-              CRLF);
+    gtfs_agency_jp_label_writer();
 
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -133,6 +141,16 @@ static void gtfs_agency_jp_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_stops_label_writer()
+{
+    csv_write("%s%s",
+              "stop_id,stop_code,stop_name,"
+              "stop_desc,stop_lat,stop_lon,"
+              "zone_id,stop_url,location_type,"
+              "parent_station,stop_timezone,wheelchair_boarding",
+              CRLF);
+}
+
 static void gtfs_stops_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -142,12 +160,7 @@ static void gtfs_stops_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[STOPS]);
 
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "stop_id,stop_code,stop_name,"
-              "stop_desc,stop_lat,stop_lon,"
-              "zone_id,stop_url,location_type,"
-              "parent_station,stop_timezone,wheelchair_boarding",
-              CRLF);
+    gtfs_stops_label_writer();
 
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -169,6 +182,15 @@ static void gtfs_stops_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_routes_label_writer()
+{
+    csv_write("%s%s",
+              "route_id,agency_id,route_short_name,"
+              "route_long_name,route_desc,route_type,"
+              "route_url,route_color,route_text_color,jp_parent_route_id",
+              CRLF);
+}
+
 static void gtfs_routes_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -178,11 +200,7 @@ static void gtfs_routes_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[ROUTES]);
 
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "route_id,agency_id,route_short_name,"
-              "route_long_name,route_desc,route_type,"
-              "route_url,route_color,route_text_color,jp_parent_route_id",
-              CRLF);
+    gtfs_routes_label_writer();
 
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -207,6 +225,16 @@ static void gtfs_routes_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_trips_label_writer()
+{
+    csv_write("%s%s",
+              "route_id,service_id,trip_id,"
+              "trip_headsign,trip_short_name,direction_id,"
+              "block_id,shape_id,wheelchair_accessible,bikes_allowed,"
+              "jp_trip_desc,jp_trip_desc_symbol,jp_office_id",
+              CRLF);
+}
+
 static void gtfs_trips_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -217,12 +245,7 @@ static void gtfs_trips_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[TRIPS]);
     
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "route_id,service_id,trip_id,"
-              "trip_headsign,trip_short_name,direction_id,"
-              "block_id,shape_id,wheelchair_accessible,bikes_allowed,"
-              "jp_trip_desc,jp_trip_desc_symbol,jp_office_id",
-              CRLF);
+    gtfs_trips_label_writer();
     
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -248,6 +271,15 @@ static void gtfs_trips_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_stop_times_label_writer()
+{
+    csv_write("%s%s",
+              "trip_id,arrival_time,departure_time,stop_id,"
+              "stop_sequence,stop_headsign,pickup_type,drop_off_type,"
+              "shape_dist_traveled,timepoint",
+              CRLF);
+}
+
 static void gtfs_stop_times_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -257,11 +289,7 @@ static void gtfs_stop_times_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[STOP_TIMES]);
     
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "trip_id,arrival_time,departure_time,stop_id,"
-              "stop_sequence,stop_headsign,pickup_type,drop_off_type,"
-              "shape_dist_traveled,timepoint",
-              CRLF);
+    gtfs_stop_times_label_writer();
     
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -282,6 +310,15 @@ static void gtfs_stop_times_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_calendar_label_writer()
+{
+    csv_write("%s%s",
+              "service_id,"
+              "monday,tuesday,wednesday,thursday,friday,saturday,sunday,"
+              "start_date,end_date",
+              CRLF);
+}
+
 static void gtfs_calendar_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -291,11 +328,7 @@ static void gtfs_calendar_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[CALENDAR]);
     
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "service_id,"
-              "monday,tuesday,wednesday,thursday,friday,saturday,sunday,"
-              "start_date,end_date",
-              CRLF);
+    gtfs_calendar_label_writer();
     
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -314,6 +347,13 @@ static void gtfs_calendar_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_calendar_dates_label_writer()
+{
+    csv_write("%s%s",
+              "service_id,date,exception_type",
+              CRLF);
+}
+
 static void gtfs_calendar_dates_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -323,9 +363,7 @@ static void gtfs_calendar_dates_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[CALENDAR_DATES]);
     
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "service_id,date,exception_type",
-              CRLF);
+    gtfs_calendar_dates_label_writer();
     
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -341,6 +379,14 @@ static void gtfs_calendar_dates_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_fare_attributes_label_writer()
+{
+    csv_write("%s%s",
+              "fare_id,price,currency_type,payment_method,"
+              "transfers,agency_id,transfer_duration",
+              CRLF);
+}
+
 static void gtfs_fare_attributes_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -350,10 +396,7 @@ static void gtfs_fare_attributes_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[FARE_ATTRIBUTES]);
 
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "fare_id,price,currency_type,payment_method,"
-              "transfers,agency_id,transfer_duration",
-              CRLF);
+    gtfs_fare_attributes_label_writer();
 
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -370,6 +413,13 @@ static void gtfs_fare_attributes_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_fare_rules_label_writer()
+{
+    csv_write("%s%s",
+              "fare_id,route_id,origin_id,destination_id,contains_id",
+              CRLF);
+}
+
 static void gtfs_fare_rules_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -379,9 +429,7 @@ static void gtfs_fare_rules_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[FARE_RULES]);
 
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "fare_id,route_id,origin_id,destination_id,contains_id",
-              CRLF);
+    gtfs_fare_rules_label_writer();
 
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -397,6 +445,13 @@ static void gtfs_fare_rules_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_shapes_label_writer()
+{
+    csv_write("%s%s",
+              "shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence,shape_dist_traveled",
+              CRLF);
+}
+
 static void gtfs_shapes_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -406,9 +461,7 @@ static void gtfs_shapes_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[SHAPES]);
     
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence,shape_dist_traveled",
-              CRLF);
+    gtfs_shapes_label_writer();
     
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -425,6 +478,13 @@ static void gtfs_shapes_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_frequencies_label_writer()
+{
+    csv_write("%s%s",
+              "trip_id,start_time,end_time,headway_secs,exact_times",
+              CRLF);
+}
+
 static void gtfs_frequencies_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -434,9 +494,7 @@ static void gtfs_frequencies_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[FREQUENCIES]);
     
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "trip_id,start_time,end_time,headway_secs,exact_times",
-              CRLF);
+    gtfs_frequencies_label_writer();
     
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -453,6 +511,13 @@ static void gtfs_frequencies_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_transfers_label_writer()
+{
+    csv_write("%s%s",
+              "from_stop_id,to_stop_id,transfer_type,min_transfer_time",
+              CRLF);
+}
+
 static void gtfs_transfers_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -462,9 +527,7 @@ static void gtfs_transfers_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[TRANSFERS]);
     
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "from_stop_id,to_stop_id,transfer_type,min_transfer_time",
-              CRLF);
+    gtfs_transfers_label_writer();
     
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -478,6 +541,14 @@ static void gtfs_transfers_writer(const char* dir, struct vector_t* tbl)
     }
     
     csv_finalize();
+}
+
+void gtfs_feed_info_label_writer()
+{
+    csv_write("%s%s",
+              "feed_publisher_name,feed_publisher_url,feed_lang,"
+              "feed_start_date,feed_end_date,feed_version",
+              CRLF);
 }
 
 static void gtfs_feed_info_writer(const char* dir, struct feed_info_t* feed_info)
@@ -495,10 +566,7 @@ static void gtfs_feed_info_writer(const char* dir, struct feed_info_t* feed_info
     catpath(csvpath, g_gtfs_filename[FEED_INFO]);
     
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "feed_publisher_name,feed_publisher_url,feed_lang,"
-              "feed_start_date,feed_end_date,feed_version",
-              CRLF);
+    gtfs_feed_info_label_writer();
     
     add_quote(feed_publisher_name, feed_info->feed_publisher_name);
     add_quote(feed_publisher_url, feed_info->feed_publisher_url);
@@ -515,6 +583,13 @@ static void gtfs_feed_info_writer(const char* dir, struct feed_info_t* feed_info
     csv_finalize();
 }
 
+void gtfs_translations_label_writer()
+{
+    csv_write("%s%s",
+              "trans_id,lang,translation",
+              CRLF);
+}
+
 static void gtfs_translations_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -524,9 +599,7 @@ static void gtfs_translations_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[TRANSLATIONS]);
 
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "trans_id,lang,translation",
-              CRLF);
+    gtfs_translations_label_writer();
 
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -547,6 +620,13 @@ static void gtfs_translations_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_routes_jp_label_writer()
+{
+    csv_write("%s%s",
+              "route_id,route_update_date,origin_stop,via_stop,destination_stop",
+              CRLF);
+}
+
 static void gtfs_routes_jp_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -556,9 +636,7 @@ static void gtfs_routes_jp_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[ROUTES_JP]);
     
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "route_id,route_update_date,origin_stop,via_stop,destination_stop",
-              CRLF);
+    gtfs_routes_jp_label_writer();
     
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {
@@ -574,6 +652,13 @@ static void gtfs_routes_jp_writer(const char* dir, struct vector_t* tbl)
     csv_finalize();
 }
 
+void gtfs_office_jp_label_writer()
+{
+    csv_write("%s%s",
+              "office_id,office_name,office_url,office_phone",
+              CRLF);
+}
+
 static void gtfs_office_jp_writer(const char* dir, struct vector_t* tbl)
 {
     char csvpath[MAX_PATH];
@@ -583,9 +668,7 @@ static void gtfs_office_jp_writer(const char* dir, struct vector_t* tbl)
     catpath(csvpath, g_gtfs_filename[OFFICE_JP]);
     
     csv_initialize(csvpath);
-    csv_write("%s%s",
-              "office_id,office_name,office_url,office_phone",
-              CRLF);
+    gtfs_office_jp_label_writer();
     
     count = vect_count(tbl);
     for (i = 0; i < count; i++) {

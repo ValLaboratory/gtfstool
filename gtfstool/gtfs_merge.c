@@ -315,7 +315,7 @@ static void gtfs_merge_translations(struct vector_t* src_tbl, struct vector_t* m
 static void set_default_agency()
 {
     
-    if (is_gtfs_file_exist(GTFS_FILE_AGENCY)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_AGENCY)) {
         struct agency_t* agency;
         
         agency = (struct agency_t*)vect_get(g_gtfs->agency_tbl, 0);
@@ -351,7 +351,7 @@ static void set_default_agency()
 static void set_default_agency_jp()
 {
     
-    if (is_gtfs_file_exist(GTFS_FILE_AGENCY_JP)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_AGENCY_JP)) {
         struct agency_jp_t* ajp;
         
         ajp = (struct agency_jp_t*)vect_get(g_gtfs->agency_jp_tbl, 0);
@@ -379,65 +379,65 @@ static int gtfs_merge_one(struct merge_gtfs_prefix_t* m, int index)
 {
     g_gtfs = gtfs_alloc();
     
-    if (gtfs_zip_archive_reader(m->gtfs_file_name) < 0) {
+    if (gtfs_zip_archive_reader(m->gtfs_file_name, g_gtfs) < 0) {
         err_write("GTFSファイルを読み込めませんでした(%s)。\n", m->gtfs_file_name);
         gtfs_free(g_gtfs, 1);
         return -1;
     }
 
-    if (is_gtfs_file_exist(GTFS_FILE_STOPS)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_STOPS)) {
         gtfs_merge_stops(g_gtfs->stops_tbl, _mrg_gtfs->stops_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_STOPS;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_ROUTES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_ROUTES)) {
         gtfs_merge_routes(g_gtfs->routes_tbl, _mrg_gtfs->routes_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_ROUTES;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_ROUTES_JP)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_ROUTES_JP)) {
         gtfs_merge_routes_jp(g_gtfs->routes_jp_tbl, _mrg_gtfs->routes_jp_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_ROUTES_JP;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_TRIPS)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_TRIPS)) {
         gtfs_merge_trips(g_gtfs->trips_tbl, _mrg_gtfs->trips_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_TRIPS;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_OFFICE_JP)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_OFFICE_JP)) {
         gtfs_merge_office_jp(g_gtfs->office_jp_tbl, _mrg_gtfs->office_jp_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_OFFICE_JP;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_STOP_TIMES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_STOP_TIMES)) {
         gtfs_merge_stop_times(g_gtfs->stop_times_tbl, _mrg_gtfs->stop_times_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_STOP_TIMES;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_CALENDAR)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_CALENDAR)) {
         gtfs_merge_calendar(g_gtfs->calendar_tbl, _mrg_gtfs->calendar_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_CALENDAR;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_CALENDAR_DATES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_CALENDAR_DATES)) {
         gtfs_merge_calendar_dates(g_gtfs->calendar_dates_tbl, _mrg_gtfs->calendar_dates_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_CALENDAR_DATES;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_FARE_ATTRIBUTES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_FARE_ATTRIBUTES)) {
         gtfs_merge_fare_attributes(g_gtfs->fare_attrs_tbl, _mrg_gtfs->fare_attrs_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_FARE_ATTRIBUTES;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_FARE_RULES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_FARE_RULES)) {
         gtfs_merge_fare_rules(g_gtfs->fare_rules_tbl, _mrg_gtfs->fare_rules_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_FARE_RULES;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_SHAPES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_SHAPES)) {
         gtfs_merge_shapes(g_gtfs->shapes_tbl, _mrg_gtfs->shapes_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_SHAPES;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_FREQUENCIES)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_FREQUENCIES)) {
         gtfs_merge_frequencies(g_gtfs->frequencies_tbl, _mrg_gtfs->frequencies_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_FREQUENCIES;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_TRANSFERS)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_TRANSFERS)) {
         gtfs_merge_transfers(g_gtfs->transfers_tbl, _mrg_gtfs->transfers_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_TRANSFERS;
     }
-    if (is_gtfs_file_exist(GTFS_FILE_TRANSLATIONS)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_TRANSLATIONS)) {
         gtfs_merge_translations(g_gtfs->translations_tbl, _mrg_gtfs->translations_tbl, m->prefix);
         _mrg_gtfs->file_exist_bits |= GTFS_FILE_TRANSLATIONS;
     }
@@ -454,7 +454,7 @@ static int gtfs_merge_one(struct merge_gtfs_prefix_t* m, int index)
 
 static void set_default_feed_info()
 {
-    if (is_gtfs_file_exist(GTFS_FILE_FEED_INFO)) {
+    if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_FEED_INFO)) {
         if (strlen(g_merged_feed_info.feed_publisher_name) > 0)
             strcpy(g_feed_info.feed_publisher_name, g_merged_feed_info.feed_publisher_name);
 

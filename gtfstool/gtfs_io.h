@@ -25,6 +25,8 @@
 #ifndef _GTFS_IO_H
 #define _GTFS_IO_H
 
+#define CRLF    "\r\n"
+
 #define AGENCY              0
 #define STOPS               1
 #define ROUTES              2
@@ -333,9 +335,27 @@ extern "C" {
 #endif
 
 // gtfs_reader.c
-int gtfs_zip_archive_reader(const char* zippath);
+int gtfs_zip_archive_reader(const char* zippath, struct gtfs_t* gtfs);
 
 // gtfs_writer.c
+char* add_quote(char* qstr, const char* str);
+void gtfs_agency_label_writer(void);
+void gtfs_agency_jp_label_writer(void);
+void gtfs_stops_label_writer(void);
+void gtfs_routes_label_writer(void);
+void gtfs_trips_label_writer(void);
+void gtfs_stop_times_label_writer(void);
+void gtfs_calendar_label_writer(void);
+void gtfs_calendar_dates_label_writer(void);
+void gtfs_fare_attributes_label_writer(void);
+void gtfs_fare_rules_label_writer(void);
+void gtfs_shapes_label_writer(void);
+void gtfs_frequencies_label_writer(void);
+void gtfs_transfers_label_writer(void);
+void gtfs_feed_info_label_writer(void);
+void gtfs_translations_label_writer(void);
+void gtfs_routes_jp_label_writer(void);
+void gtfs_office_jp_label_writer(void);
 void gtfs_feed_writer(const char* dir, struct gtfs_t* gtfs);
 void gtfs_feed_delete(const char* dir, struct gtfs_t* gtfs);
 int gtfs_zip_archive_writer(const char* dir, const char* zipname, struct gtfs_t* gtfs);

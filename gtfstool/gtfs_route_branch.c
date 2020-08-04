@@ -113,12 +113,22 @@ static int check_route_stop_pattern()
         char* route_id;
         struct vector_t* trips_tbl;
         int count, i;
-        int first_stop_count = 0;
-        struct vector_t* first_stop_time_tbl = NULL;
+        int base_index = -1;
+        struct vector_t* base_stop_time_tbl = NULL;
+        int base_stops_count = 0;
         
         route_id = *keys;
         trips_tbl = (struct vector_t*)hash_get(g_route_trips_htbl, route_id);
-        
+
+        base_index = gtfs_trips_base_index(trips_tbl);
+        if (base_index >= 0) {
+            struct trip_t* trip;
+
+            trip = (struct trip_t*)vect_get(trips_tbl, base_index);
+            base_stop_time_tbl = (struct vector_t*)hash_get(g_vehicle_timetable, trip->trip_id);
+            base_stops_count = vect_count(base_stop_time_tbl);
+        }
+
         count = vect_count(trips_tbl);
         for (i = 0; i < count; i++) {
             struct trip_t* trip;
@@ -129,24 +139,17 @@ static int check_route_stop_pattern()
             stop_time_tbl = (struct vector_t*)hash_get(g_vehicle_timetable, trip->trip_id);
             stop_count = vect_count(stop_time_tbl);
             
-            if (i == 0) {
-                first_stop_count = stop_count;
-                first_stop_time_tbl = stop_time_tbl;
-                continue;
-            }
-            // 停車数チェック
-            if (first_stop_count != stop_count) {
+            if (base_stops_count != stop_count) {
                 // 新たなroute_idとして分割します。
                 branch_route_id(route_id, trip->trip_id);
-                keys++;
                 continue;
             }
 
             // 停車パターンチェック
             for (j = 0; j < stop_count; j++) {
-                struct stop_time_t* fst = (struct stop_time_t*)vect_get(first_stop_time_tbl, j);
+                struct stop_time_t* bst = (struct stop_time_t*)vect_get(base_stop_time_tbl, j);
                 struct stop_time_t* st = (struct stop_time_t*)vect_get(stop_time_tbl, j);
-                if (strcmp(fst->stop_id, st->stop_id) != 0) {
+                if (strcmp(bst->stop_id, st->stop_id) != 0) {
                     // 新たなroute_idとして分割します。
                     branch_route_id(route_id, st->trip_id);
                     break;
@@ -194,7 +197,7 @@ int gtfs_route_branch()
     g_branch_routes_count = 0;
 
     TRACE("%s\n", "*GTFS(zip)の読み込み*");
-    if (gtfs_zip_archive_reader(g_gtfs_zip) < 0) {
+    if (gtfs_zip_archive_reader(g_gtfs_zip, g_gtfs) < 0) {
         err_write("gtfs_check: zip_archive_reader error (%s).\n", g_gtfs_zip);
         return -1;
     }

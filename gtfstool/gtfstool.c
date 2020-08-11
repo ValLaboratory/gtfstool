@@ -69,6 +69,10 @@ int is_gtfs_file_exist(struct gtfs_t* gtfs, unsigned int file_kind)
 
 char* utf8_conv(const char* str, char* enc_buf, int enc_bufsize)
 {
+    if (! str) {
+        *enc_buf = '\0';
+        return enc_buf;
+    }
 #ifdef _WIN32
     if (convert("UTF-8", str, strlen(str), "CP932", enc_buf, enc_bufsize) < 0)
         return "???";

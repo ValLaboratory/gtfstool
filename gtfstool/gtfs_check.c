@@ -29,7 +29,7 @@ static const char* get_stop_name(const char* stop_id)
     struct stop_t* stop;
 
     stop = (struct stop_t*)hash_get(g_gtfs_hash->stops_htbl, stop_id);
-    if (strlen(stop->parent_station) > 0)
+    if (stop && strlen(stop->parent_station) > 0)
         stop = (struct stop_t*)hash_get(g_gtfs_hash->stops_htbl, stop->parent_station);
     return (stop)? stop->stop_name : stop_id;
 }

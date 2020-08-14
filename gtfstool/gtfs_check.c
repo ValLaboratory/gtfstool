@@ -1400,6 +1400,14 @@ int gtfs_trips_base_index(struct vector_t* trips_tbl)
     return base_index;
 }
 
+static int equals_stop_times_stop_id(struct stop_time_t* bst, struct stop_time_t* st)
+{
+    if (bst && st) {
+        return (strcmp(bst->stop_id, st->stop_id) == 0);
+    }
+    return 0;
+}
+
 static int gtfs_route_stop_pattern_check()
 {
     int result = 0;
@@ -1466,9 +1474,13 @@ static int gtfs_route_stop_pattern_check()
             stop_time_tbl = (struct vector_t*)hash_get(g_vehicle_timetable, trip->trip_id);
             stop_count = vect_count(stop_time_tbl);
             for (j = 0; j < stop_count; j++) {
-                struct stop_time_t* bst = (struct stop_time_t*)vect_get(base_stop_time_tbl, j);
-                struct stop_time_t* st = (struct stop_time_t*)vect_get(stop_time_tbl, j);
-                if (strcmp(bst->stop_id, st->stop_id) != 0) {
+                struct stop_time_t* bst = NULL;
+                struct stop_time_t* st = NULL;
+
+                if (j < base_stops_count)
+                    bst = (struct stop_time_t*)vect_get(base_stop_time_tbl, j);
+                st = (struct stop_time_t*)vect_get(stop_time_tbl, j);
+                if (equals_stop_times_stop_id(bst, st) == 0) {
                     if (! g_route_stop_pattern_valid) {
                         int ret = gtfs_error("route_id(%s):(trip(%s)とtrip(%s))の停車パターンが違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
                                              utf8_conv(route_id, (char*)alloca(256), 256),

@@ -1400,7 +1400,7 @@ int gtfs_trips_base_index(struct vector_t* trips_tbl)
     return base_index;
 }
 
-static int equals_stop_times_stop_id(struct stop_time_t* bst, struct stop_time_t* st)
+int equals_stop_times_stop_id(struct stop_time_t* bst, struct stop_time_t* st)
 {
     if (bst && st) {
         return (strcmp(bst->stop_id, st->stop_id) == 0);

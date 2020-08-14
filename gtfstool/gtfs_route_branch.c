@@ -147,9 +147,13 @@ static int check_route_stop_pattern()
 
             // 停車パターンチェック
             for (j = 0; j < stop_count; j++) {
-                struct stop_time_t* bst = (struct stop_time_t*)vect_get(base_stop_time_tbl, j);
-                struct stop_time_t* st = (struct stop_time_t*)vect_get(stop_time_tbl, j);
-                if (strcmp(bst->stop_id, st->stop_id) != 0) {
+                struct stop_time_t* bst = NULL;
+                struct stop_time_t* st = NULL;
+
+                if (j < base_stops_count)
+                    bst = (struct stop_time_t*)vect_get(base_stop_time_tbl, j);
+                st = (struct stop_time_t*)vect_get(stop_time_tbl, j);
+                if (equals_stop_times_stop_id(bst, st) == 0) {
                     // 新たなroute_idとして分割します。
                     branch_route_id(route_id, st->trip_id);
                     break;

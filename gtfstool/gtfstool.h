@@ -318,6 +318,7 @@ int gtfs_hash_table_key_check(void);
 int gtfs_vehicle_timetable(void);
 int gtfs_route_trips(void);
 int gtfs_trips_base_index(struct vector_t* trips_tbl);
+int equals_stop_times_stop_id(struct stop_time_t* bst, struct stop_time_t* st);
 int gtfs_check(void);
 
 // gtfs_split.c

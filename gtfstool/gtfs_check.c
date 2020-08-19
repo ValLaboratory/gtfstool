@@ -120,14 +120,17 @@ static int gtfs_file_exist_check(struct gtfs_t* gtfs)
     return result;
 }
 
-static int is_gtfs_file_label(const char* label_line, const char* first_label)
+static int is_gtfs_file_label(const char* label_line, const char* field_label)
 {
+    char** label_list;
     char label[256];
-    char* ptr;
+    int index;
 
     strncpy(label, label_line, sizeof(label));
-    ptr = quote((trim(label)));
-    return (memcmp(ptr, first_label, strlen(first_label)) == 0)? 1 : 0;
+    label_list = split(label, COMMA_CHAR);
+    index = find_label_index(label_list, field_label);
+    list_free(label_list);
+    return (index >= 0);
 }
 
 static int gtfs_file_label_check()
@@ -205,7 +208,7 @@ static int gtfs_file_label_check()
         }
     }
     if (is_gtfs_file_exist(g_gtfs, GTFS_FILE_TRANSLATIONS)) {
-        if (! is_gtfs_file_label(g_gtfs_label.translations, "trans_id")) {
+        if (! is_gtfs_file_label(g_gtfs_label.translations, "translation")) {
             int ret = gtfs_error("translations.txtの先頭行にラベル行が存在していません。");
             if (ret < result)
                 result = ret;

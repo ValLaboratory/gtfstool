@@ -32,16 +32,13 @@
 #define MINIZ_HEADER_FILE_ONLY
 #include "miniz.c"
 
-#define LF_STR      "\n"
-#define COMMA_CHAR  ','
-
 static void check_id_size(int kind, const char* id)
 {
     if (strlen(id) > GTFS_ID_SIZE)
         err_write("%s: [%s] size over.\n", g_gtfs_filename[kind], id);
 }
 
-static int find_label_index(char** label_list, const char* target_label)
+int find_label_index(char** label_list, const char* target_label)
 {
     if (label_list) {
         int n;
@@ -1295,7 +1292,15 @@ static void gtfs_translations_reader(const char* csvptr, size_t size, struct gtf
     label_list = split(tp, COMMA_CHAR);
     
     trans_id_index = find_label_index(label_list, "trans_id");
+    if (trans_id_index < 0) {
+        // gtfs new version(2020/08/19)
+        trans_id_index = find_label_index(label_list, "field_value");
+    }
     lang_index = find_label_index(label_list, "lang");
+    if (lang_index < 0) {
+        // gtfs new version(2020/08/19)
+        lang_index = find_label_index(label_list, "language");
+    }
     translation_index = find_label_index(label_list, "translation");
 
     while (tp) {

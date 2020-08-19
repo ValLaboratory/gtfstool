@@ -25,7 +25,11 @@
 #ifndef _GTFS_IO_H
 #define _GTFS_IO_H
 
+
+#define LF_STR  "\n"
 #define CRLF    "\r\n"
+
+#define COMMA_CHAR  ','
 
 #define AGENCY              0
 #define STOPS               1
@@ -335,6 +339,7 @@ extern "C" {
 #endif
 
 // gtfs_reader.c
+int find_label_index(char** label_list, const char* target_label);
 int gtfs_zip_archive_reader(const char* zippath, struct gtfs_t* gtfs);
 
 // gtfs_writer.c

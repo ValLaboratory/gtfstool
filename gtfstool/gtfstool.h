@@ -38,7 +38,7 @@
 
 #ifdef _MAIN
 #define PROGRAM_NAME        "gtfstool"
-#define PROGRAM_VERSION     "0.7"
+#define PROGRAM_VERSION     "0.8"
 #endif
 
 #define GTFS_SUCCESS        0

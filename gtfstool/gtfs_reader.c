@@ -1274,12 +1274,20 @@ static void gtfs_feed_info_reader(const char* csvptr, size_t size, struct gtfs_t
     free(ptr);
 }
 
+static int table_type(const char* table_name)
+{
+    if (strcmp(table_name, "stops") == 0)
+        return STOPS;
+    return -1;
+}
+
 static void gtfs_translations_reader(const char* csvptr, size_t size, struct gtfs_t* gtfs)
 {
     char* ptr;
     char* tp;
     char** label_list;
     int trans_id_index, lang_index, translation_index;
+    int table_name_index, field_name_index, record_id_index, record_sub_id_index, field_value_index;
     int lineno = 0;
 
     ptr = malloc(size+1);
@@ -1292,16 +1300,19 @@ static void gtfs_translations_reader(const char* csvptr, size_t size, struct gtf
     label_list = split(tp, COMMA_CHAR);
     
     trans_id_index = find_label_index(label_list, "trans_id");
-    if (trans_id_index < 0) {
-        // gtfs new version(2020/08/19)
-        trans_id_index = find_label_index(label_list, "field_value");
-    }
     lang_index = find_label_index(label_list, "lang");
     if (lang_index < 0) {
         // gtfs new version(2020/08/19)
         lang_index = find_label_index(label_list, "language");
     }
     translation_index = find_label_index(label_list, "translation");
+
+    // gtfs new version(2020/08/21)
+    table_name_index = find_label_index(label_list, "table_name");
+    field_name_index = find_label_index(label_list, "field_name");
+    record_id_index = find_label_index(label_list, "record_id");
+    record_sub_id_index = find_label_index(label_list, "record_sub_id");
+    field_value_index = find_label_index(label_list, "field_value");
 
     while (tp) {
         tp = strtok(NULL, LF_STR);
@@ -1324,6 +1335,29 @@ static void gtfs_translations_reader(const char* csvptr, size_t size, struct gtf
                     if (translation_index >= 0 && translation_index < n) {
                         char* p = quote(trim(list[translation_index]));
                         strncpy(trans->translation, p, sizeof(trans->translation));
+                    }
+                    // gtfs new version(2020/08/21)
+                    if (table_name_index >= 0 && table_name_index < n) {
+                        char* p = quote(trim(list[table_name_index]));
+                        // stops以外は無視します
+                        trans->table_type = table_type(p);
+                        strncpy(trans->table_name, p, sizeof(trans->table_name));
+                    }
+                    if (field_name_index >= 0 && field_name_index < n) {
+                        char* p = quote(trim(list[field_name_index]));
+                        strncpy(trans->field_name, p, sizeof(trans->field_name));
+                    }
+                    if (record_id_index >= 0 && record_id_index < n) {
+                        char* p = quote(trim(list[record_id_index]));
+                        strncpy(trans->record_id, p, sizeof(trans->record_id));
+                    }
+                    if (record_sub_id_index >= 0 && record_sub_id_index < n) {
+                        char* p = quote(trim(list[record_sub_id_index]));
+                        strncpy(trans->record_sub_id, p, sizeof(trans->record_sub_id));
+                    }
+                    if (field_value_index >= 0 && field_value_index < n) {
+                        char* p = quote(trim(list[field_value_index]));
+                        strncpy(trans->field_value, p, sizeof(trans->field_value));
                     }
                     trans->lineno = lineno;
                     vect_append(gtfs->translations_tbl, trans);

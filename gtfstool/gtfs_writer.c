@@ -583,10 +583,47 @@ static void gtfs_feed_info_writer(const char* dir, struct feed_info_t* feed_info
     csv_finalize();
 }
 
-void gtfs_translations_label_writer()
+void gtfs_old_translations_label_writer()
 {
     csv_write("%s%s",
               "trans_id,lang,translation",
+              CRLF);
+}
+
+static void gtfs_old_translations_writer(const char* dir, struct vector_t* tbl)
+{
+    char csvpath[MAX_PATH];
+    int count, i;
+
+    strcpy(csvpath, dir);
+    catpath(csvpath, g_gtfs_filename[TRANSLATIONS]);
+
+    csv_initialize(csvpath);
+    gtfs_translations_label_writer();
+
+    count = vect_count(tbl);
+    for (i = 0; i < count; i++) {
+        struct translation_t* t;
+        char trans_id[256];
+        char translation[512];
+
+        t = (struct translation_t*)vect_get(tbl, i);
+
+        add_quote(trans_id, t->trans_id);
+        add_quote(translation, t->translation);
+
+        csv_write("%s,%s,%s%s",
+                  trans_id, t->lang, translation,
+                  CRLF);
+    }
+
+    csv_finalize();
+}
+
+void gtfs_translations_label_writer()
+{
+    csv_write("%s%s",
+              "table_name,field_name,language,translation,record_id,record_sub_id,field_value",
               CRLF);
 }
 
@@ -612,9 +649,15 @@ static void gtfs_translations_writer(const char* dir, struct vector_t* tbl)
         add_quote(trans_id, t->trans_id);
         add_quote(translation, t->translation);
 
-        csv_write("%s,%s,%s%s",
-                  trans_id, t->lang, translation,
-                  CRLF);
+        if (strlen(t->table_name) > 0) {
+            csv_write("%s,%s,%s,%s,,,%s%s",
+                      t->table_name, t->field_name, t->lang, translation, trans_id,
+                      CRLF);
+        } else {
+            csv_write("stops,stop_name,%s,%s,,,%s%s",
+                      t->lang, translation, trans_id,
+                      CRLF);
+        }
     }
 
     csv_finalize();

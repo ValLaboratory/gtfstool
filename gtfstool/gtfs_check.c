@@ -473,6 +473,29 @@ static int gtfs_hash_fare_rules_table()
     return result;
 }
 
+static int set_trans_id(struct translation_t* trans)
+{
+    int done_flag = 0;
+
+    if (strlen(trans->trans_id) > 0) {
+        done_flag = 1;
+    } else if (strlen(trans->field_value) > 0) {
+        strncpy(trans->trans_id, trans->field_value, sizeof(trans->trans_id));
+        done_flag = 1;
+    } else if (strlen(trans->record_id) > 0) {
+        if (trans->table_type == STOPS) {
+            struct stop_t* stop;
+
+            stop = hash_get(g_gtfs_hash->stops_htbl, trans->record_id);
+            if (stop) {
+                strncpy(trans->trans_id, stop->stop_name, sizeof(trans->trans_id));
+                done_flag = 1;
+            }
+        }
+    }
+    return done_flag;
+}
+
 static int gtfs_hash_translations_table()
 {
     int result = 0;
@@ -483,22 +506,24 @@ static int gtfs_hash_translations_table()
         struct translation_t* trans;
         
         trans = (struct translation_t*)vect_get(g_gtfs->translations_tbl, i);
-        if (strlen(trans->trans_id) > 0 && stricmp(trans->lang, "ja-Hrkt") == 0) {
-            struct translation_t* trans2;
+        if (stricmp(trans->lang, "ja-Hrkt") == 0) {
+            if (set_trans_id(trans)) {
+                struct translation_t* trans2;
 
-            trans2 = hash_get(g_gtfs_hash->translations_htbl, trans->trans_id);
-            if (trans2) {
-                int ret;
-                char tid[256];
+                trans2 = hash_get(g_gtfs_hash->translations_htbl, trans->trans_id);
+                if (trans2) {
+                    int ret;
+                    char tid[256];
 
-                ret = gtfs_warning("translations.txtの%d行目のtrans_id[%s]は%d行目にすでに登録済みです。",
-                                   trans->lineno,
-                                   utf8_conv(trans->trans_id, tid, sizeof(tid)),
-                                   trans2->lineno);
-                if (ret < result)
-                    result = ret;
-            } else {
-                hash_put(g_gtfs_hash->translations_htbl, trans->trans_id, trans);
+                    ret = gtfs_warning("translations.txtの%d行目の翻訳語[%s]は%d行目にすでに登録済みです。",
+                                       trans->lineno,
+                                       utf8_conv(trans->trans_id, tid, sizeof(tid)),
+                                       trans2->lineno);
+                    if (ret < result)
+                        result = ret;
+                } else {
+                    hash_put(g_gtfs_hash->translations_htbl, trans->trans_id, trans);
+                }
             }
         }
     }
@@ -1114,15 +1139,17 @@ static int translations_column_check()
         struct translation_t* tr;
         
         tr = (struct translation_t*)vect_get(g_gtfs->translations_tbl, i);
-        if (strlen(tr->trans_id) < 1) {
-            int ret = gtfs_error("translations.txtの%d行目のtrans_idは必須項目です。", tr->lineno);
-            if (ret < result)
-                result = ret;
-        }
-        if (strlen(tr->translation) < 1) {
-            int ret = gtfs_error("translations.txtの%d行目のtranslationは必須項目です。", tr->lineno);
-            if (ret < result)
-                result = ret;
+        if (stricmp(tr->lang, "ja-Hrkt") == 0) {
+            if (strlen(tr->trans_id) < 1) {
+                int ret = gtfs_error("translations.txtの%d行目の翻訳語は必須項目です。", tr->lineno);
+                if (ret < result)
+                    result = ret;
+            }
+            if (strlen(tr->translation) < 1) {
+                int ret = gtfs_error("translations.txtの%d行目のtranslationは必須項目です。", tr->lineno);
+                if (ret < result)
+                    result = ret;
+            }
         }
     }
     return result;

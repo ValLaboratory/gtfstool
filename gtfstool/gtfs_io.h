@@ -253,11 +253,18 @@ struct feed_info_t {
     int lineno;
 };
 
-// translations.txt (langが"ja-Hrkt"のみ)
+// translations.txt (langが"ja-Hrkt"のみHash化される)
 struct translation_t {
     char trans_id[256];             // 原語（キー）
     char lang[16];                  // 言語
     char translation[512];          // 翻訳語
+    // 以降は GTFS new Versionのフィールド（new versionの場合は trans_id は存在しない）
+    int table_type;                 // table_nameの定義値
+    char table_name[256];           // table_nameの値
+    char field_name[256];           // field_nameの値
+    char record_id[256];            // tableのID値（tableのID値か原語かどちらかが設定される）
+    char record_sub_id[256];        // record_sub_id値
+    char field_value[256];          // 原語（tableのID値か原語のどちらかが設定される）
     int lineno;                     // 行番号
 };
 
@@ -358,6 +365,7 @@ void gtfs_shapes_label_writer(void);
 void gtfs_frequencies_label_writer(void);
 void gtfs_transfers_label_writer(void);
 void gtfs_feed_info_label_writer(void);
+void gtfs_old_translations_label_writer(void);
 void gtfs_translations_label_writer(void);
 void gtfs_routes_jp_label_writer(void);
 void gtfs_office_jp_label_writer(void);

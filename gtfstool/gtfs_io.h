@@ -372,6 +372,7 @@ void gtfs_office_jp_label_writer(void);
 void gtfs_feed_writer(const char* dir, struct gtfs_t* gtfs);
 void gtfs_feed_delete(const char* dir, struct gtfs_t* gtfs);
 int gtfs_zip_archive_writer(const char* dir, const char* zipname, struct gtfs_t* gtfs);
+int gtfs_zip_archive_fare_writer(const char* dir, const char* zipname, const char* in_zippath, struct gtfs_t* gtfs);
 
 #ifdef __cplusplus
 }

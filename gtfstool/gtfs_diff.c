@@ -27,7 +27,7 @@
 static void gtfs_diff_agency(const char* dir, struct vector_t* tbl, struct vector_t* diff_tbl)
 {
     char csvpath[MAX_PATH];
-    int count, i;
+    int count, i, diff_count;
 
     char agency_name[256];
 
@@ -38,6 +38,8 @@ static void gtfs_diff_agency(const char* dir, struct vector_t* tbl, struct vecto
     gtfs_agency_label_writer();
 
     count = vect_count(tbl);
+    diff_count = vect_count(diff_tbl);
+
     for (i = 0; i < count; i++) {
         struct agency_t* a;
 

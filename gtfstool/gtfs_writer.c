@@ -832,3 +832,90 @@ int gtfs_zip_archive_writer(const char* dir, const char* zipname, struct gtfs_t*
     done = mz_zip_writer_end(&zip_archive);
     return (done == MZ_TRUE)? 0 : -1;
 }
+
+static int is_ignore_name(const char** ignore_tbl, const char* name)
+{
+    int i = 0;
+
+    while (1) {
+        const char* p;
+
+        p = ignore_tbl[i++];
+        if (! p)
+            break;
+        if (strcmp(name, p) == 0)
+            return 1;
+    }
+    return 0;
+}
+
+static void gtfs_zip_add_file(mz_zip_archive* outzip, const char* dir, const char* filename)
+{
+    char csvpath[MAX_PATH];
+
+    strcpy(csvpath, dir);
+    catpath(csvpath, filename);
+    mz_zip_writer_add_file(outzip, filename, csvpath, NULL, 0, MZ_DEFAULT_LEVEL);
+}
+
+/* 元のGTFS(zip)をコピーして fare_rules.txt, fare_attributs.txt を追加し stops.txt を置き換えます。
+ */
+int gtfs_zip_archive_fare_writer(const char* dir, const char* zipname, const char* in_zippath, struct gtfs_t* gtfs)
+{
+    static mz_zip_archive inzip;
+    static mz_zip_archive outzip;
+    mz_bool done = 0;
+    mz_uint files;
+    int i;
+    char zippath[MAX_PATH];
+    char* ignore_name_tbl[] = { "fare_rules.txt", "fare_attributes.txt", "stops.txt", NULL };
+
+    memset(&inzip, '\0', sizeof(inzip));
+    done = mz_zip_reader_init_file(&inzip, in_zippath, 0);
+    if (! done)
+        return -1;
+
+    strcpy(zippath, dir);
+    catpath(zippath, zipname);
+    memset(&outzip, '\0', sizeof(outzip));
+    done = mz_zip_writer_init_file(&outzip, zippath, 0);
+    if (! done)
+        return -1;
+
+    files = mz_zip_reader_get_num_files(&inzip);
+    for (i = 0; i < files; i++) {
+        char fname[256];
+        char* csvptr;
+        size_t csvsize;
+
+        mz_zip_reader_get_filename(&inzip, i, fname, sizeof(fname));
+        if (is_ignore_name((const char**)ignore_name_tbl, fname))
+            continue;
+        csvptr = mz_zip_reader_extract_file_to_heap(&inzip, fname, &csvsize, 0);
+        if (csvptr) {
+            mz_zip_writer_add_mem(&outzip, fname, csvptr, csvsize, MZ_DEFAULT_LEVEL);
+            mz_free(csvptr);
+        }
+    }
+
+    if (gtfs->file_exist_bits & GTFS_FILE_STOPS) {
+        gtfs_stops_writer(dir, gtfs->stops_tbl);
+        gtfs_zip_add_file(&outzip, dir, g_gtfs_filename[STOPS]);
+        remove_csvfile(dir, g_gtfs_filename[STOPS]);
+    }
+    if (gtfs->file_exist_bits & GTFS_FILE_FARE_ATTRIBUTES) {
+        gtfs_fare_attributes_writer(dir, gtfs->fare_attrs_tbl);
+        gtfs_zip_add_file(&outzip, dir, g_gtfs_filename[FARE_ATTRIBUTES]);
+        remove_csvfile(dir, g_gtfs_filename[FARE_ATTRIBUTES]);
+    }
+    if (gtfs->file_exist_bits & GTFS_FILE_FARE_RULES) {
+        gtfs_fare_rules_writer(dir, gtfs->fare_rules_tbl);
+        gtfs_zip_add_file(&outzip, dir, g_gtfs_filename[FARE_RULES]);
+        remove_csvfile(dir, g_gtfs_filename[FARE_RULES]);
+    }
+
+    mz_zip_writer_finalize_archive(&outzip);
+    mz_zip_writer_end(&outzip);
+    mz_zip_reader_end(&inzip);
+    return 0;
+}

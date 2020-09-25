@@ -2,7 +2,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2008-2019 YAMAMOTO Naoki
+ * Copyright (c) 2008-2020 YAMAMOTO Naoki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,8 @@
 #include "csect.h"
 #include "apiexp.h"
 
-#define MAX_HASH_KEYSIZE 255
-
 struct hash_element_t {
-    char key[MAX_HASH_KEYSIZE+1];
+    char* key;
     void* value;
     struct hash_element_t* next;
 };

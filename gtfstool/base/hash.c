@@ -2,7 +2,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2008-2019 YAMAMOTO Naoki
+ * Copyright (c) 2008-2020 YAMAMOTO Naoki
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@
  * キーと値をペアで管理するハッシュテーブルの関数群です。
  * スレッドセーフで動作します。
  *
- * キーの最大サイズは 255バイトです。
+ * キーの最大サイズの制限はありません（2020/09/25以前は255バイトでした）。
  * キーの衝突が起こった場合はリンクリストで管理されます。
  *
  * ハッシュとして追加できる要素数に制限はありませんが、
@@ -63,10 +63,12 @@ static void free_element(struct hash_element_t* e)
             struct hash_element_t* en;
 
             en = e->next;
+            free(e->key);
             free(e);
             e = en;
         }
     } else {
+        free(e->key);
         free(e);
     }
 }
@@ -278,11 +280,6 @@ APIEXPORT int hash_put(struct hash_t* ht, const char* key, const void* value)
     int result = 0;
 
     CS_START(&ht->critical_section);
-    if (strlen(key) > MAX_HASH_KEYSIZE) {
-        /* エラー */
-        result = -1;
-        goto final;
-    }
 
     /* すでにキーが登録済みであれば置き換えます。*/
     e = get_element(ht, key);
@@ -296,6 +293,7 @@ APIEXPORT int hash_put(struct hash_t* ht, const char* key, const void* value)
             result = -1;
             goto final;
         }
+        new_e->key = malloc(strlen(key)+1);
         strcpy(new_e->key, key);
         new_e->value = (void*)value;
         new_e->next = NULL;
@@ -371,6 +369,7 @@ APIEXPORT int hash_delete(struct hash_t* ht, const char* key)
             } else {
                 tmp->next = e->next;
             }
+            free(e->key);
             free(e);
             result = 0;
             break;

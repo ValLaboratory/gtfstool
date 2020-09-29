@@ -1512,10 +1512,11 @@ static int gtfs_route_stop_pattern_check()
                 st = (struct stop_time_t*)vect_get(stop_time_tbl, j);
                 if (equals_stop_times_stop_id(bst, st) == 0) {
                     if (! g_route_stop_pattern_valid) {
+                        char r_id[256], trip1_id[256], trip2_id[256];
                         int ret = gtfs_error("route_id(%s):(trip(%s)とtrip(%s))の停車パターンが違います。GTFS-JPの場合はroute_idを分けて経路情報を作成してください。",
-                                             utf8_conv(route_id, (char*)alloca(256), 256),
-                                             utf8_conv(bst->trip_id, (char*)alloca(256), 256),
-                                             utf8_conv(st->trip_id, (char*)alloca(256), 256));
+                                             utf8_conv(route_id, r_id, sizeof(r_id)),
+                                             utf8_conv(bst->trip_id, trip1_id, sizeof(trip1_id)),
+                                             utf8_conv(st->trip_id, trip2_id, sizeof(trip2_id)));
                         if (ret < result)
                             result = ret;
                         break;

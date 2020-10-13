@@ -426,6 +426,8 @@ APIEXPORT char* trim(char* str)
     unsigned char* p;
 
     len = (int)strlen(str);
+    if (len == 0)
+        return str;
     i = len - 1;
     p = (unsigned char*)(str + i);
     while (i >= 0) {

@@ -519,9 +519,7 @@ static void dump_mode(int argc, const char* argv[])
         
         init_gtfs();
         strcpy(g_gtfs_zip, argv[i]);
-        g_ignore_warning = 1;
-        if (gtfs_check() == 0)
-            gtfs_dump();
+        gtfs_dump();
         final_gtfs();
     }
 }

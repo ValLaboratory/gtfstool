@@ -119,6 +119,23 @@ int gtfs_dump()
 {
     int count, i;
     
+    TRACE("%s\n", "*GTFS(zip)の読み込み*");
+    if (gtfs_zip_archive_reader(g_gtfs_zip, g_gtfs) < 0) {
+        err_write("gtfs_check: zip_archive_reader error (%s).\n",
+                  utf8_conv(g_gtfs_zip, (char*)alloca(256), 256));
+        return -1;
+    }
+
+    TRACE("%s\n", "*キーの重複チェック（ハッシュ化）*");
+    if (gtfs_hash_table_key_check() == GTFS_FATAL_ERROR)
+        return -1;
+
+    TRACE("%s\n", "*通過時刻表の作成*");
+    gtfs_vehicle_timetable();
+
+    TRACE("%s\n", "*経路の停車パターンを作成*");
+    gtfs_route_trips();
+
     count = vect_count(g_gtfs->routes_tbl);
     for (i = 0; i < count; i++) {
         struct route_t* route;

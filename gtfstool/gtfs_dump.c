@@ -57,7 +57,13 @@ static void dump_stop_times(int cols, int rows, struct vector_t** v_tbl)
                     struct stop_time_t* st;
                     
                     st = (struct stop_time_t*)vect_get(vt, y);
-                    printf("%s(%s)", st->departure_time, st->arrival_time);
+                    printf("%s", st->departure_time);
+                    if (strcmp(st->departure_time, st->arrival_time) != 0)
+                        printf("(%s)", st->arrival_time);
+                    if (atoi(st->pickup_type) > 0 || atoi(st->drop_off_type) > 0) {
+                        printf("(%s|%s)", (atoi(st->pickup_type) > 0)? "x" : "o",
+                                          (atoi(st->drop_off_type) > 0)? "x" : "o");
+                    }
                 }
             }
             if (x < cols-1)

@@ -47,6 +47,7 @@ static void usage()
     fprintf(stdout, "         [-i] チェック時にcalendar_dates.txtのservice_idがcalender.txtに\n"
                     "              存在するかチェックします\n");
     fprintf(stdout, "         [-r] 同一経路で停車パターンが違う場合にエラーとしません(Ver.2仕様)\n");
+    fprintf(stdout, "         [-a] 発着が同じバス停名でも運賃区間が登録されているかチェックします\n");
     fprintf(stdout, "         [-p proxy_server:port] プロキシサーバとポート番号を指定します\n");
     fprintf(stdout, "         [-e error_file] システムエラーを出力するファイルを指定します\n");
     fprintf(stdout, "         [-t] トレースモードをオンにして実行します\n");
@@ -301,6 +302,7 @@ static int args(int argc, const char * argv[])
 
     g_exec_mode = GTFS_CHECK_MODE;
     g_ignore_warning = 0;
+    g_same_stops_fare_rule_check = 0;
 
     for (i = 1; i < argc; i++) {
         if (argv[i][0] == '-') {
@@ -328,6 +330,8 @@ static int args(int argc, const char * argv[])
                 g_calendar_dates_service_id_check = 1;
             } else if (strcmp(argv[i], "-r") == 0) {
                 g_route_stop_pattern_valid = 1;
+            } else if (strcmp(argv[i], "-a") == 0) {
+                g_same_stops_fare_rule_check = 1;
             } else if (strcmp(argv[i], "-s") == 0) {
                 if (i < argc-1) {
                     g_output_dir = argv[++i];

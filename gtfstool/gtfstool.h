@@ -291,6 +291,11 @@ extern
 #endif
 int g_branch_routes_count;
 
+#ifndef _MAIN
+extern
+#endif
+int g_same_stops_fare_rule_check;
+
 // prototypes
 #ifdef __cplusplus
 extern "C" {

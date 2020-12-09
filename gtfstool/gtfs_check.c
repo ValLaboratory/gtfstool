@@ -1689,9 +1689,11 @@ static int gtfs_od_fare_check()
                 // 乗車/降車が可能か調べる
                 if (is_pickup_stop(origin_st) == 0 || is_dropoff_stop(dest_st) == 0)
                     continue;
-                // 発着が同じ駅は運賃が登録されていないので無視する（「の」の字路線）
-                if (is_same_stop(origin_st->stop_id, dest_st->stop_id))
-                    continue;
+                if (! g_same_stops_fare_rule_check) {
+                    // 発着が同じ駅は運賃が登録されていないので無視する（「の」の字路線）
+                    if (is_same_stop(origin_st->stop_id, dest_st->stop_id))
+                        continue;
+                }
                 // 路線+区間で運賃を検索
                 fare_rule_key(trip->route_id, origin_zone, dest_zone, hkey);
                 fare_rule = hash_get(g_gtfs_hash->fare_rules_htbl, hkey);

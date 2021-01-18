@@ -2,7 +2,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2018-2020 Val Laboratory Corporation.
+ * Copyright (c) 2018-2021 Val Laboratory Corporation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@
 
 #ifdef _MAIN
 #define PROGRAM_NAME        "gtfstool"
-#define PROGRAM_VERSION     "1.0"
+#define PROGRAM_VERSION     "1.1"
 #endif
 
 #define GTFS_SUCCESS        0
@@ -52,6 +52,7 @@
 #define GTFS_DUMP_MODE          4
 #define GTFS_ROUTE_BRANCH_MODE  5
 #define GTFS_DIFF_MODE          6
+#define GTFS_FARE_MODE          7
 #define GTFS_VERSION_MODE       9
 
 struct merge_gtfs_prefix_t {
@@ -334,6 +335,9 @@ int gtfs_merge(void);
 
 // gtfs_dump.c
 int gtfs_dump(void);
+
+// gtfs_fare.c
+int gtfs_fare(void);
 
 // gtfs_route_branch.c
 int gtfs_route_branch(void);

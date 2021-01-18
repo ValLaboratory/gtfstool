@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([gtfstool], [1.0], [yamamoto@val.co.jp])
+AC_INIT([gtfstool], [1.1], [yamamoto@val.co.jp])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([gtfstool.c])
 AC_CONFIG_HEADERS([config.h])

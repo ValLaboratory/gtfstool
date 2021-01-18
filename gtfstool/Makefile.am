@@ -4,6 +4,7 @@ gtfstool_SOURCES=	main.c \
                     gtfs_var.h \
 					gtfstool.h \
 					gtfs_dump.c \
+                    gtfs_fare.c \
 					gtfs_reader.c \
 					gtfstool.c \
 					merge_config.c \

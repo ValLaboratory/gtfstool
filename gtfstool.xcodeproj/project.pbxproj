@@ -14,6 +14,7 @@
 		CE55B8C1219A5F3A00B45F5B /* gtfs_split.c in Sources */ = {isa = PBXBuildFile; fileRef = CE55B8BF219A5F3A00B45F5B /* gtfs_split.c */; };
 		CE55FADC21795A7000DF364B /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CE55FADB21795A7000DF364B /* main.c */; };
 		CE55FB092179A99D00DF364B /* gtfs_reader.c in Sources */ = {isa = PBXBuildFile; fileRef = CE55FB082179A99D00DF364B /* gtfs_reader.c */; };
+		CE563F0725B529560001701C /* gtfs_fare.c in Sources */ = {isa = PBXBuildFile; fileRef = CE563F0625B529560001701C /* gtfs_fare.c */; };
 		CE876D39238292E20000A0D0 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE876D38238292E20000A0D0 /* libssl.a */; };
 		CE876D3B238293020000A0D0 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE876D3A238293020000A0D0 /* libcrypto.a */; };
 		CE9CBAF3217EDC1500785E30 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9CBAF2217EDC1500785E30 /* miniz.c */; };
@@ -85,6 +86,8 @@
 		CE55FADB21795A7000DF364B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		CE55FAE4217992F700DF364B /* gtfstool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gtfstool.h; sourceTree = "<group>"; };
 		CE55FB082179A99D00DF364B /* gtfs_reader.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gtfs_reader.c; sourceTree = "<group>"; };
+		CE563F0525B529170001701C /* gtfstool */ = {isa = PBXFileReference; lastKnownFileType = folder; name = gtfstool; sourceTree = "<group>"; };
+		CE563F0625B529560001701C /* gtfs_fare.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfs_fare.c; sourceTree = "<group>"; };
 		CE876D38238292E20000A0D0 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "../../../../../usr/local/Cellar/openssl@1.1/1.1.1d/lib/libssl.a"; sourceTree = "<group>"; };
 		CE876D3A238293020000A0D0 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../../../usr/local/Cellar/openssl@1.1/1.1.1d/lib/libcrypto.a"; sourceTree = "<group>"; };
 		CE9CBAF2217EDC1500785E30 /* miniz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
@@ -194,6 +197,7 @@
 		CE55FADA21795A7000DF364B /* gtfstool */ = {
 			isa = PBXGroup;
 			children = (
+				CE563F0525B529170001701C /* gtfstool */,
 				CE532398223278380030F719 /* autotools */,
 				CED14500221BBCBC00F359F3 /* base */,
 				CE9CBAF2217EDC1500785E30 /* miniz.c */,
@@ -204,6 +208,7 @@
 				CE55B8BF219A5F3A00B45F5B /* gtfs_split.c */,
 				CECD9C50219C17E00050ED31 /* gtfs_merge.c */,
 				CE351AF522164EB900B8BD1C /* gtfs_dump.c */,
+				CE563F0625B529560001701C /* gtfs_fare.c */,
 				CE9F2CCF23C849BF00AA80E5 /* gtfs_route_branch.c */,
 				CE12A6A2221A6EF4009BF3E7 /* gtfs_io.h */,
 				CEC66BB1240DF8F800DB3889 /* gtfs_var.h */,
@@ -352,6 +357,7 @@
 				CE55B8C0219A5F3A00B45F5B /* gtfs_check.c in Sources */,
 				CED14538221BBCF500F359F3 /* error.c in Sources */,
 				CED14525221BBCF500F359F3 /* hash.c in Sources */,
+				CE563F0725B529560001701C /* gtfs_fare.c in Sources */,
 				CE4E89AA21928CF200D760CE /* gtfs_writer.c in Sources */,
 				CECD9C4E219AC6C60050ED31 /* merge_config.c in Sources */,
 				CED14533221BBCF500F359F3 /* vector.c in Sources */,

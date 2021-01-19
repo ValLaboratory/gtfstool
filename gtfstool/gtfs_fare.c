@@ -71,9 +71,33 @@ static void fare_list_line(struct route_t* route, struct vector_t* stop_times_tb
     printf("\n");
 }
 
+static int target_trip(struct vector_t* trips_tbl)
+{
+    int count, i;
+    int max_stops = 0;
+    int target_index = 0;
+
+    count = vect_count(trips_tbl);
+    for (i = 0; i < count; i++) {
+        struct trip_t* trip;
+        struct vector_t* stop_times_tbl;
+        int stop_times_count;
+
+        trip = (struct trip_t*)vect_get(trips_tbl, i);
+        stop_times_tbl = (struct vector_t*)hash_get(g_vehicle_timetable, trip->trip_id);
+        stop_times_count = vect_count(stop_times_tbl);
+        if (stop_times_count > max_stops) {
+            max_stops = stop_times_count;
+            target_index = i;
+        }
+    }
+    return target_index;
+}
+
 static void fare_route_trips(struct route_t* route, struct vector_t* trips_tbl)
 {
     int count, i;
+    int index;
     struct trip_t* trip;
     struct vector_t* stop_times_tbl;
     int stop_times_count;
@@ -83,7 +107,8 @@ static void fare_route_trips(struct route_t* route, struct vector_t* trips_tbl)
         return;
 
     // stopnames
-    trip = (struct trip_t*)vect_get(trips_tbl, 0);
+    index = target_trip(trips_tbl);
+    trip = (struct trip_t*)vect_get(trips_tbl, index);
     stop_times_tbl = (struct vector_t*)hash_get(g_vehicle_timetable, trip->trip_id);
     stop_times_count = vect_count(stop_times_tbl);
 

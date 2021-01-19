@@ -1560,7 +1560,7 @@ static int is_same_stop(const char* origin_stop_id, const char* dest_stop_id)
     return 0;
 }
 
-static int is_pickup_stop(struct stop_time_t* st)
+int is_pickup_stop(struct stop_time_t* st)
 {
     if (strlen(st->pickup_type) > 0) {
         if (atoi(st->pickup_type) != 0)
@@ -1569,7 +1569,7 @@ static int is_pickup_stop(struct stop_time_t* st)
     return 1;   // 乗車可能
 }
 
-static int is_dropoff_stop(struct stop_time_t* st)
+int is_dropoff_stop(struct stop_time_t* st)
 {
     if (strlen(st->drop_off_type) > 0) {
         if (atoi(st->drop_off_type) != 0)

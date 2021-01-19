@@ -86,7 +86,6 @@
 		CE55FADB21795A7000DF364B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		CE55FAE4217992F700DF364B /* gtfstool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gtfstool.h; sourceTree = "<group>"; };
 		CE55FB082179A99D00DF364B /* gtfs_reader.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gtfs_reader.c; sourceTree = "<group>"; };
-		CE563F0525B529170001701C /* gtfstool */ = {isa = PBXFileReference; lastKnownFileType = folder; name = gtfstool; sourceTree = "<group>"; };
 		CE563F0625B529560001701C /* gtfs_fare.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gtfs_fare.c; sourceTree = "<group>"; };
 		CE876D38238292E20000A0D0 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "../../../../../usr/local/Cellar/openssl@1.1/1.1.1d/lib/libssl.a"; sourceTree = "<group>"; };
 		CE876D3A238293020000A0D0 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../../../../../usr/local/Cellar/openssl@1.1/1.1.1d/lib/libcrypto.a"; sourceTree = "<group>"; };
@@ -197,7 +196,6 @@
 		CE55FADA21795A7000DF364B /* gtfstool */ = {
 			isa = PBXGroup;
 			children = (
-				CE563F0525B529170001701C /* gtfstool */,
 				CE532398223278380030F719 /* autotools */,
 				CED14500221BBCBC00F359F3 /* base */,
 				CE9CBAF2217EDC1500785E30 /* miniz.c */,

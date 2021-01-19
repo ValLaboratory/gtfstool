@@ -24,31 +24,38 @@
  */
 #include "gtfstool.h"
 
-static void fare_list_line(struct route_t* route, struct vector_t* stops_tbl, int index)
+static void fare_list_line(struct route_t* route, struct vector_t* stop_times_tbl, int index)
 {
     int n, i;
+    struct stop_time_t* st;
     struct stop_t* stop;
 
-    n = vect_count(stops_tbl);
+    n = vect_count(stop_times_tbl);
 
+    // route_id column
     printf(",");
+
     for (i = 0; i < index; i++) {
         printf(",");
     }
-    stop = (struct stop_t*)vect_get(stops_tbl, index);
+
+    st = (struct stop_time_t*)vect_get(stop_times_tbl, index);
+    stop = (struct stop_t*)hash_get(g_gtfs_hash->stops_htbl, st->stop_id);
     printf("%s",
            utf8_conv(stop->stop_name, (char*)alloca(256), 256));
 //           utf8_conv(stop->zone_id, (char*)alloca(256), 256));
 
     // fare
     for (i = index+1; i < n; i++) {
+        struct stop_time_t* dest_st;
         struct stop_t* dest_stop;
         char hkey[128];
         struct fare_rule_t* frule;
         struct fare_attribute_t* fattr;
 
         printf(",");
-        dest_stop = (struct stop_t*)vect_get(stops_tbl, i);
+        dest_st = (struct stop_time_t*)vect_get(stop_times_tbl, i);
+        dest_stop = (struct stop_t*)hash_get(g_gtfs_hash->stops_htbl, dest_st->stop_id);
         fare_rule_key(route->route_id, stop->zone_id, dest_stop->zone_id, hkey);
         frule = hash_get(g_gtfs_hash->fare_rules_htbl, hkey);
         if (! frule) {
@@ -67,7 +74,6 @@ static void fare_list_line(struct route_t* route, struct vector_t* stops_tbl, in
 static void fare_route_trips(struct route_t* route, struct vector_t* trips_tbl)
 {
     int count, i;
-    struct vector_t* stops_tbl;
     struct trip_t* trip;
     struct vector_t* stop_times_tbl;
     int stop_times_count;
@@ -80,22 +86,10 @@ static void fare_route_trips(struct route_t* route, struct vector_t* trips_tbl)
     trip = (struct trip_t*)vect_get(trips_tbl, 0);
     stop_times_tbl = (struct vector_t*)hash_get(g_vehicle_timetable, trip->trip_id);
     stop_times_count = vect_count(stop_times_tbl);
-    stops_tbl = vect_initialize(stop_times_count);
-
-    for (i = 0; i < stop_times_count; i++) {
-        struct stop_time_t* st;
-        struct stop_t* stop;
-            
-        st = (struct stop_time_t*)vect_get(stop_times_tbl, i);
-        stop = (struct stop_t*)hash_get(g_gtfs_hash->stops_htbl, st->stop_id);
-        vect_append(stops_tbl, stop);
-    }
 
     for (i = stop_times_count-1; i >= 0; i--) {
-        fare_list_line(route, stops_tbl, i);
+        fare_list_line(route, stop_times_tbl, i);
     }
-
-    vect_finalize(stops_tbl);
 }
 
 int gtfs_fare()

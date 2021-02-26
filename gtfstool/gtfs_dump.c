@@ -54,15 +54,17 @@ static void dump_stop_times(int cols, int rows, struct vector_t** v_tbl)
                         stop = (struct stop_t*)hash_get(g_gtfs_hash->stops_htbl, stop->parent_station);
                     printf("%s", utf8_conv(stop->stop_name, (char*)alloca(256), 256));
                 } else {
-                    struct stop_time_t* st;
-                    
-                    st = (struct stop_time_t*)vect_get(vt, y);
-                    printf("%s", st->departure_time);
-                    if (strcmp(st->departure_time, st->arrival_time) != 0)
-                        printf("(%s)", st->arrival_time);
-                    if (atoi(st->pickup_type) > 0 || atoi(st->drop_off_type) > 0) {
-                        printf("(%s|%s)", (atoi(st->pickup_type) > 0)? "x" : "o",
-                                          (atoi(st->drop_off_type) > 0)? "x" : "o");
+                    if (vect_count(vt) > y) {
+                        struct stop_time_t* st;
+
+                        st = (struct stop_time_t*)vect_get(vt, y);
+                        printf("%s", st->departure_time);
+                        if (strcmp(st->departure_time, st->arrival_time) != 0)
+                            printf("(%s)", st->arrival_time);
+                        if (atoi(st->pickup_type) > 0 || atoi(st->drop_off_type) > 0) {
+                            printf("(%s|%s)", (atoi(st->pickup_type) > 0)? "x" : "o",
+                                              (atoi(st->drop_off_type) > 0)? "x" : "o");
+                        }
                     }
                 }
             }
